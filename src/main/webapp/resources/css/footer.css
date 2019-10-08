@@ -1,0 +1,79 @@
+/* Footer */
+#footer{
+    width: 100%;
+    background: #363636;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    z-index: 97;
+}
+#footer .logo-footer{
+    float: left;
+    margin-right: 30px;
+    margin-left: 20px;
+    text-align: center;
+}
+#footer .contact-info-i,
+#footer .contact-info
+{   
+    margin-left: 20px;
+    margin-bottom: 0;
+    font-style: normal;
+}
+#footer .contact-info-i p,
+#footer .contact-info p{
+    position: relative;
+    margin: 0;
+    padding : 5px 0;
+    font-family: 돋움,sans-serif;
+    line-height: 1.4;
+    font-size: 12px;
+    color: #949494;
+    
+}
+#footer .contact-info p{
+    float: left;
+    margin-right: 20px;
+    margin-left: 20px;
+}
+
+#footer::before{
+    content : " ";
+    display: table;
+}
+#footer .contact-info p::before{
+    position: absolute;
+    top: 50%;
+    left: 0;
+    display: block;
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+}
+#footer .contact-info p.address::before{
+    content: "\f015";
+    margin-left: -20px;
+    margin-top: -10px;
+    font-size: 20px;
+}
+#footer .contact-info p.email::before{
+    content: "\f0e0";
+    margin-left: -20px;
+    margin-top: -10px;
+    font-size: 17px;
+}
+
+/* Footer Bottom */
+#footer-bottom{
+    width: 100%;
+    background: #2c2c2c;
+    padding-top: 16px;
+    padding-bottom:16px;
+}
+#footer-bottom .copyright{
+    margin: 0 0 0 20px;
+    padding: 0;
+    font-family: Tahoma,Geneva,sans-serif,굴림;
+    font-size: 12px;
+    color: #8c8c8c;
+}

@@ -1,0 +1,43 @@
+.main-widget-wrapper{
+    border-width: 0px;
+    border-style: solid;
+    border-color:rgb(58,58,58);
+    margin: 0px 0px 20px 20px;
+    background-image: none;
+    background-repeat: repeat;
+    background-position: 0% 0%;
+}
+.main-content-wrapper{
+    width: 100%;
+    border-top: 6px solid #ff645b;
+}
+.main-content-wrapper .main-content-title{
+    padding: 20px 0px 4px 0px;
+    margin-bottom: 12px;
+    border-bottom: 2px solid #f2f2f2;
+}
+.main-content-title h4{
+    display: inline-block;
+    margin: 0 18px 0 0;
+    padding: 2px 0 3px;
+    line-height: 1.2;
+    font-family: 'Nanum Gothic','Malgun Gothic',돋움,sans-serif;
+    font-size: 16px;
+    color: #ff645b;
+    font-weight: 700;
+}
+.main-content-title a.more{
+    display: inline-block;
+    margin: 0 18px 0 0;
+    padding: 4px 8px 3px;
+    line-height: 1.2;
+    font-family: 돋움,sans-serif;
+    font-size: 11px;
+    color: #808080;
+    background-color:#f8f8f8;
+    border: 1px solid #c8c8c8;
+    outline: none;
+}
+.pure-list .list-title{
+    float: left;
+}

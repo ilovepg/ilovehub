@@ -1,0 +1,15 @@
+.main-menu{
+    background-color:#ff645b;
+}
+.main-menu a{
+    color: white;
+}
+.dropdown-menu a{
+    color:black;
+}
+
+/* i 아이콘들 a태그안의 텍스트와 좀 떨어지게 설정 */
+.nav-item .dropdown-menu .dropdown-item .fa,
+.nav-item .nav-link .fa {
+    padding-right: 5px;
+}
