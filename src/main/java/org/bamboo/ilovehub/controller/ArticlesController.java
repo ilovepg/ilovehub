@@ -3,6 +3,7 @@ package org.bamboo.ilovehub.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bamboo.ilovehub.domain.BoardClassificationVO;
 import org.bamboo.ilovehub.domain.BoardVO;
 import org.bamboo.ilovehub.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,7 @@ public class ArticlesController {
 	//게시글 리스트화면 [공지,기술,자유]
 	@GetMapping("/{board}")
 	public void showBoard(@PathVariable("board")String board) {}
+	
 	//게시글 쓰기화면 [공지,기술,자유]
 	@GetMapping("/{board}/write")
 	public ModelAndView boardWrite(@PathVariable("board")String board) {

@@ -1,6 +1,7 @@
 package org.bamboo.ilovehub.mapper;
 
 import org.bamboo.ilovehub.domain.BoardClassificationVO;
+import org.bamboo.ilovehub.domain.ContainInitWriteVO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +18,15 @@ public class BoardMapperTest {
 	@Setter(onMethod_ = @Autowired)
 	private BoardMapper mapper;
 	
-	@Test
+	//@Test
 	public void getBoardClassification() {
 		BoardClassificationVO vo=mapper.getBoardClassification("tech");
+		log.info(vo.toString());
+	}
+	
+	@Test
+	public void test() {
+		ContainInitWriteVO vo = mapper.getWriteInit("tech");
 		log.info(vo.toString());
 	}
 }

@@ -39,7 +39,8 @@ public class ArticleServiceImpl implements ArticleService {
 			log.info("getBoardClassification:"+vo.toString());
 			return vo;
 		}catch(Exception e) {
-			log.error(this.getClass().getName()+" error:"+e.getMessage());
+			//log.error(this.getClass().getName()+" error:"+e.getMessage());
+			log.error(this.getClass().getSimpleName()+new Object(){}.getClass().getEnclosingMethod().getName()+" error:"+e.getMessage());
 			return null;
 		}
 	}

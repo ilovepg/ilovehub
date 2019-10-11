@@ -6,4 +6,29 @@
   	<select id="getBoardClassification" resultType="org.bamboo.ilovehub.domain.BoardClassificationVO">
   		SELECT * FROM board_classification_code WHERE classification_text=#{classificationText}
   	</select>
+  	
+  	<resultMap id="ContainInitWriteVOMap" type="org.bamboo.ilovehub.domain.ContainInitWriteVO">
+  		<association property="bcvo" javaType="org.bamboo.ilovehub.domain.BoardClassificationVO">
+  			<id property="classificationCode" column="classification_code"/>
+  			<result property="classificationText" column="classification_text"/>
+  			<result property="desc" column="desc"/>
+		</association>
+		<collection  property="bpvos" javaType="ArrayList" ofType="org.bamboo.ilovehub.domain.BoardPrefaceVO">
+  			<id property="code" column="code"/>
+  			<result property="codeExplain" column="code_explain"/>
+		</collection>
+  	</resultMap>
+  	
+  	<select id="getWriteInit" resultMap="ContainInitWriteVOMap">
+  		select
+			apc.code, apc.code_explain,
+			bcc.*
+		from
+			article_preface_code apc
+		inner join board_article_classifiction_map bacm on
+			apc.code = bacm.article_preface_code
+		inner join board_classification_code bcc on
+			bacm.board_classification_code = bcc.classification_code
+		where bcc.classification_text=#{classificationText} order by apc.order asc
+  	</select>
   </mapper>

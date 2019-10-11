@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class BoardVO {
 	private Long board_id; //게시글 고유번호
-	private int preface; //머리말
+	private int preface; //머리말 코드
 	private int classification_code; //게시판 분류코드
 	private String title; //제목
 	private String contents;//내용
