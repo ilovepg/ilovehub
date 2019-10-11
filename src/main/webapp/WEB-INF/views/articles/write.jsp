@@ -234,7 +234,7 @@
 							<div class="row">
 								<div class="col-md-12" style="padding: 0 15px 0 45px;">
 									<div class="main-content-inner">
-										<p>자유게시판</p>
+										<p>게시판</p>
 										<div class="card">
 											<div class="card-header">글쓰기</div>
 											<div class="card-body">
@@ -242,7 +242,7 @@
 													<div class="col-md-12">
 														<label class="header" for="preface">분류</label>
 														<select name="preface" required="required"
-															data-error="Please select one option.">
+														data-error="Please select one option.">
 															<option value="">선택해주세요.</option>
 															<option value="Spring">Spring</option>
 															<option value="NodeJs">NodeJs</option>
@@ -305,6 +305,8 @@
 															class="btn btn-outline-danger" id="writeActBtn">등록</button>
 													</div>
 												</div>
+												<!-- noti,free,tech 등등과 같은 게시판 종류 -->
+												<input id="pageFlag" type="hidden" value="${board}"/>
 											</div>
 										</div>
 										<!-- end of Card -->
@@ -352,7 +354,7 @@
 		<%@include file="../includes/footer.html"%>
 		<!-- ckeditor 호출 -->
 		<script src="/resources/external_lib/ckeditor/ckeditor.js"></script>
-
-		<script src="/resources/js/custom/test.js"></script>
+		<!-- submit, 초기작업 js호출 -->
+		<script src="/resources/js/custom/write_common.js"></script>
 </body>
 </html>
