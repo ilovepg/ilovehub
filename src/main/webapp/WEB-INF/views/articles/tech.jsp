@@ -381,7 +381,7 @@
 														<button class='btn btn-primary'>검색</button>
 													</div>
 												</form>
-                                            	<a style="color:white;" href="free/write" class="btn btn-success pull-right">쓰기</a>
+                                            	<a style="color:white;" href="${board}/write" class="btn btn-success pull-right">쓰기</a>
                                             </div>
                                             <ul class="pagination justify-content-center custom-pagination" style="margin-top: 20px;">
                                                 <li class="page-item"><a class="page-link" href="#">Previous</a></li>

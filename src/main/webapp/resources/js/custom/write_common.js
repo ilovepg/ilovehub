@@ -1,4 +1,3 @@
-const board = document.querySelector("#pageFlag").value;
 // Replace the <textarea id="editor"> with a CKEditor
 // instance, using default configuration.
 CKEDITOR.replace( 'contents',{
@@ -39,7 +38,7 @@ function handleSubmit(){
 		"permit_reply":permit_reply
 	};
 	
-	fetch("/articles/"+board, {
+	fetch("/articles/"+pageFlag, {
 		method: "POST",
 		headers: {
             'Content-Type': 'application/json'

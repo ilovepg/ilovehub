@@ -1,6 +1,12 @@
 package org.bamboo.ilovehub.mapper;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.bamboo.ilovehub.domain.BoardClassificationVO;
+import org.bamboo.ilovehub.domain.BoardPrefaceVO;
 import org.bamboo.ilovehub.domain.ContainInitWriteVO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +33,17 @@ public class BoardMapperTest {
 	@Test
 	public void test() {
 		ContainInitWriteVO vo = mapper.getWriteInit("tech");
+		//HashMap vo = mapper.getWriteInit("tech");
 		log.info(vo.toString());
+		List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
+		Map<String,Object> map = new HashMap<String,Object>();
+		//vo.getBpvos().forEach(authVO -> log.info("Bpvos:"+authVO));
+		for(BoardPrefaceVO item : vo.getBpvos()) {
+			map.put("code", item.getCode());
+			map.put("codeExplain", item.getCodeExplain());
+			list.add(map);
+			map = new HashMap<String,Object>();
+		}
+		log.info(list.toString());
 	}
 }

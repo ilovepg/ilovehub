@@ -3,9 +3,8 @@ package org.bamboo.ilovehub.service;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bamboo.ilovehub.domain.BoardClassificationVO;
-import org.bamboo.ilovehub.domain.BoardPrefaceVO;
 import org.bamboo.ilovehub.domain.BoardVO;
+import org.bamboo.ilovehub.domain.ContainInitWriteVO;
 import org.bamboo.ilovehub.mapper.BoardMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,18 +24,13 @@ public class ArticleServiceImpl implements ArticleService {
 	}
 
 	@Override
-	public BoardPrefaceVO getPreface(int boardClassificationCode) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public BoardClassificationVO getBoardClassification(String classificationText) {
+	public ContainInitWriteVO getWriteInit(String classificationText) {
 		//예외처리 필요
 		//↓↓↓임시예외처리↓↓↓
 		try {
-			BoardClassificationVO vo = boardMapper.getBoardClassification("free");
+			ContainInitWriteVO vo = boardMapper.getWriteInit(classificationText);
 			log.info("getBoardClassification:"+vo.toString());
+			vo.getBpvos().forEach(authVO -> log.info("Bpvos:"+authVO));
 			return vo;
 		}catch(Exception e) {
 			//log.error(this.getClass().getName()+" error:"+e.getMessage());

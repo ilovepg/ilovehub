@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -305,8 +307,6 @@
 															class="btn btn-outline-danger" id="writeActBtn">등록</button>
 													</div>
 												</div>
-												<!-- noti,free,tech 등등과 같은 게시판 종류 -->
-												<input id="pageFlag" type="hidden" value="${board}"/>
 											</div>
 										</div>
 										<!-- end of Card -->
@@ -355,6 +355,26 @@
 		<!-- ckeditor 호출 -->
 		<script src="/resources/external_lib/ckeditor/ckeditor.js"></script>
 		<!-- submit, 초기작업 js호출 -->
+		
+		<script>
+			<!-- noti,free,tech 등등과 같은 게시판 종류 -->
+			const pageFlag = '<c:out value="${board}" />';
+			const classificationCode = '<c:out value="${bcvo.classificationCode}" />';
+			
+			const bpvos ='<c:out value="${bpvos}" />';
+			const bpvosSize=${fn:length(bpvos)};
+			const test=new Array();
+			
+			for(let i=0; i<bpvosSize; i++){
+				const obj={
+					"code":'<c:out value="${bpvos[i].code}" />',
+					"codeExplain":'<c:out value="${bpvos[i]}" />'
+				}
+				test.push(obj);
+			}
+			
+			
+		</script>
 		<script src="/resources/js/custom/write_common.js"></script>
 </body>
 </html>
