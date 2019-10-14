@@ -3,10 +3,6 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="org.bamboo.ilovehub.mapper.BoardMapper">
-  	<select id="getBoardClassification" resultType="org.bamboo.ilovehub.domain.BoardClassificationVO">
-  		SELECT * FROM board_classification_code WHERE classification_text=#{classificationText}
-  	</select>
-  	
   	<resultMap id="ContainInitWriteVOMap" type="org.bamboo.ilovehub.domain.ContainInitWriteVO">
   		<id property="bcvo.classificationCode" column="classification_code"/>
   		<association property="bcvo" javaType="org.bamboo.ilovehub.domain.BoardClassificationVO">
@@ -48,4 +44,27 @@
 		order by
 			apc.order asc
   	</select>
+  	
+  	<insert id="regArticle" useGeneratedKeys="true" keyProperty="boardId" 
+  			 parameterType="org.bamboo.ilovehub.domain.BoardVO">
+  		insert into board (
+  			classification_code,
+			preface_code,
+			title,
+			contents,
+			writer,
+			reg_date,
+			is_public,
+			permit_reply 
+		)VALUES(
+			#{classificationCode},
+			#{preface},
+			#{title},
+			#{contents},
+			#{writer},
+			CURRENT_TIMESTAMP(),
+			#{isPublic},
+			#{permitReply}
+		)
+  	</insert>
   </mapper>

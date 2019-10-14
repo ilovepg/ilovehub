@@ -246,12 +246,9 @@
 														<select name="preface" required="required"
 														data-error="Please select one option.">
 															<option value="">선택해주세요.</option>
-															<option value="Spring">Spring</option>
-															<option value="NodeJs">NodeJs</option>
-															<option value="기타">기타</option>
-															<option value="뉴스/신제품">뉴스/신제품</option>
-															<option value="코드리뷰">코드리뷰</option>
-															<option value="일정공유">일정공유</option>
+															<c:forEach var="item" items="${bpvos}">
+																<option value="<c:out value='${item.code}'/>"><c:out value='${item.codeExplain}'/></option>
+															</c:forEach>
 														</select>
 													</div>
 												</div>
@@ -356,24 +353,16 @@
 		<script src="/resources/external_lib/ckeditor/ckeditor.js"></script>
 		<!-- submit, 초기작업 js호출 -->
 		
+		<!-- 
+			서버에서 온 값 JSTL로 받아준다.
+			JS를 나누면(import) JSTL에 접근하지 못하므로 <input hidden>에 넣으려다가 이런식으로 넣는다.
+			아레에서 import하는 write_common.js에서 사용하는 변수들
+		 -->
 		<script>
 			<!-- noti,free,tech 등등과 같은 게시판 종류 -->
 			const pageFlag = '<c:out value="${board}" />';
+			<!-- noti,free,tech 등등과 같은 게시판 종류에 따른 게시판코드 -->
 			const classificationCode = '<c:out value="${bcvo.classificationCode}" />';
-			
-			const bpvos ='<c:out value="${bpvos}" />';
-			const bpvosSize=${fn:length(bpvos)};
-			const test=new Array();
-			
-			for(let i=0; i<bpvosSize; i++){
-				const obj={
-					"code":'<c:out value="${bpvos[i].code}" />',
-					"codeExplain":'<c:out value="${bpvos[i]}" />'
-				}
-				test.push(obj);
-			}
-			
-			
 		</script>
 		<script src="/resources/js/custom/write_common.js"></script>
 </body>
