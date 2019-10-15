@@ -16,5 +16,5 @@ public class BoardVO {
 	private int recommendations;//추천수
 	private char isPublic;//공개,비공개 여부
 	private char permitReply;//댓글허용 여부
-	private ArrayList<String> tags; //tag
+	private ArrayList<TagVO> tags; //tag
 }

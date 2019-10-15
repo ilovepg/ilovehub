@@ -29,6 +29,7 @@ public class ArticleServiceImpl implements ArticleService {
 			if(boardInsertResult==1) { //board테이블에 insert성공
 				Long boardId=vo.getBoardId();
 				log.info("boardId:"+boardId);
+				int tagInsertResult=boardMapper.regTag(vo.getTags().get(0));
 			}
 		}catch(Exception e){
 			log.error(this.getClass().getSimpleName()+new Object(){}.getClass().getEnclosingMethod().getName()+" error:"+e.getMessage());

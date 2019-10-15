@@ -67,4 +67,8 @@
 			#{permitReply}
 		)
   	</insert>
+  	<insert id="regTag" useGeneratedKeys="true" keyProperty="tagId"
+  		parameterType="org.bamboo.ilovehub.domain.TagVO">
+  		insert into board_tag (tag) values (#{tag}) ON DUPLICATE KEY UPDATE tagging_cnt = tagging_cnt + 1;
+  	</insert>
   </mapper>
