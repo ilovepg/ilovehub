@@ -1,10 +1,12 @@
 package org.bamboo.ilovehub.service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.bamboo.ilovehub.domain.BoardVO;
 import org.bamboo.ilovehub.domain.ContainInitWriteVO;
+import org.bamboo.ilovehub.domain.TagVO;
 import org.bamboo.ilovehub.mapper.BoardMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,9 +22,42 @@ public class ArticleServiceImpl implements ArticleService {
 	
 	public Map<String,Object> boardWrite(BoardVO vo){
 		Map<String,Object> result = new HashMap<String,Object>();
+		
+		//TODO : 회원완료되면 writer에 회원 넣기 지금은 임시
+		vo.setWriter("tester");
+		
+		try {
+			int boardInsertResult=insertBoardBasic(vo);
+			if(boardInsertResult==1) { //board테이블에 insert성공
+				Long boardId=vo.getBoardId();
+				insertBoardTags(vo.getTags(),boardId);
+			}
+		}catch(Exception e){
+			log.error(this.getClass().getSimpleName()+new Object(){}.getClass().getEnclosingMethod().getName()+" error:"+e.getMessage());
+		}
 		return result;
 	}
-
+	
+	private int insertBoardBasic(BoardVO vo) {
+		int boardInsertResult=boardMapper.regArticle(vo);
+		log.info("boardId:"+vo.getBoardId());
+		return boardInsertResult;
+	}
+	
+	private void insertBoardTags(List<TagVO> tags, Long boardId) {
+		for(TagVO item:tags) {
+			int tagInsertResult=boardMapper.regTag(item);
+			log.info("tagInsertResult:"+tagInsertResult);
+			if(tagInsertResult>0) {
+				insertBoardTagMapping(boardId, item.getTagId());
+			}
+		}
+	}
+	
+	private void insertBoardTagMapping(Long boardId, Long tagId) {
+		boardMapper.regBoardTagMap(tagId,boardId);
+	}
+	
 	@Override
 	public ContainInitWriteVO getWriteInit(String classificationText) {
 		//예외처리 필요
@@ -30,7 +65,7 @@ public class ArticleServiceImpl implements ArticleService {
 		try {
 			ContainInitWriteVO vo = boardMapper.getWriteInit(classificationText);
 			log.info("getBoardClassification:"+vo.toString());
-			vo.getBpvos().forEach(authVO -> log.info("Bpvos:"+authVO));
+			//vo.getBpvos().forEach(authVO -> log.info("Bpvos:"+authVO));
 			return vo;
 		}catch(Exception e) {
 			//log.error(this.getClass().getName()+" error:"+e.getMessage());

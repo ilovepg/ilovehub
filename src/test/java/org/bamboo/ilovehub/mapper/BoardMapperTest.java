@@ -24,12 +24,6 @@ public class BoardMapperTest {
 	@Setter(onMethod_ = @Autowired)
 	private BoardMapper mapper;
 	
-	//@Test
-	public void getBoardClassification() {
-		BoardClassificationVO vo=mapper.getBoardClassification("tech");
-		log.info(vo.toString());
-	}
-	
 	@Test
 	public void test() {
 		ContainInitWriteVO vo = mapper.getWriteInit("tech");

@@ -35,9 +35,8 @@ public class ArticlesController {
 	@ResponseBody
 	public Map<String,Object> boardWrite(@PathVariable String board,@RequestBody BoardVO vo) {
 		Map<String,Object> result = new HashMap<String,Object>();
-		log.info("board:"+board);
-		log.info("vo:"+vo.toString());
-		
+		log.info("board:"+board+", vo:"+vo.toString());
+		articleService.boardWrite(vo);
 		result.put("result", "success");
 		return result;
 	}
@@ -48,7 +47,7 @@ public class ArticlesController {
 	}
 	
 	//게시글 쓰기화면 [공지,기술,자유]
-	@GetMapping("/{board}/write") 
+	@GetMapping("/{board}/new-form") 
 	public ModelAndView boardWrite(@PathVariable("board")String board) {
 		ModelAndView mv = new ModelAndView("/articles/write");
 		ContainInitWriteVO vo = articleService.getWriteInit(board);

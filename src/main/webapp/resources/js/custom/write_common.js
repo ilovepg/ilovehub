@@ -22,20 +22,21 @@ function handleSubmit(){
 	const contents=CKEDITOR.instances.editor.getData();
 	//추후에 필요할 내용입력하는것
 	//CKEDITOR.instances.editor.setData(''); //태그포함입력
-	let is_public = document.querySelector("input[name=is_public]").checked; //공개
-	let permit_reply = document.querySelector("input[name=permit_reply]").checked; //댓글허용
-	is_public=is_public == true ? 'Y':'N';
-	permit_reply=permit_reply == true ? 'Y':'N';
+	let isPublic = document.querySelector("input[name=is_public]").checked; //공개
+	let permitReply = document.querySelector("input[name=permit_reply]").checked; //댓글허용
+	isPublic=isPublic == true ? 'Y':'N';
+	permitReply=permitReply == true ? 'Y':'N';
 	
 	//태그
 	let tagValue = marginTag(); //Tag값 array로 변환		
 	const writeData = {
 		"preface":preface,
+		"classificationCode":classificationCode,
 		"title":title,
 		"contents":contents,
 		"tags":tagValue,
-		"is_public":is_public,
-		"permit_reply":permit_reply
+		"isPublic":isPublic,
+		"permitReply":permitReply
 	};
 	
 	fetch("/articles/"+pageFlag, {
