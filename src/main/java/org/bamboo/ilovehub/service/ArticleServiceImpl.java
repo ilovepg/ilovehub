@@ -10,6 +10,7 @@ import org.bamboo.ilovehub.domain.TagVO;
 import org.bamboo.ilovehub.mapper.BoardMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
@@ -20,6 +21,7 @@ public class ArticleServiceImpl implements ArticleService {
 	@Setter(onMethod_ = @Autowired)
 	BoardMapper boardMapper; //게시글 매퍼
 	
+	@Transactional
 	public Map<String,Object> boardWrite(BoardVO vo){
 		Map<String,Object> result = new HashMap<String,Object>();
 		
@@ -34,27 +36,26 @@ public class ArticleServiceImpl implements ArticleService {
 			}
 		}catch(Exception e){
 			log.error(this.getClass().getSimpleName()+new Object(){}.getClass().getEnclosingMethod().getName()+" error:"+e.getMessage());
+			throw new RuntimeException(e);
 		}
 		return result;
 	}
-	
-	private int insertBoardBasic(BoardVO vo) {
+	public int insertBoardBasic(BoardVO vo) {
 		int boardInsertResult=boardMapper.regArticle(vo);
 		log.info("boardId:"+vo.getBoardId());
 		return boardInsertResult;
 	}
-	
-	private void insertBoardTags(List<TagVO> tags, Long boardId) {
+	public void insertBoardTags(List<TagVO> tags, Long boardId) {
 		for(TagVO item:tags) {
 			int tagInsertResult=boardMapper.regTag(item);
+			//int tagInsertResult=boardMapper.regTag(null); //Transaction Test를 위함
 			log.info("tagInsertResult:"+tagInsertResult);
 			if(tagInsertResult>0) {
 				insertBoardTagMapping(boardId, item.getTagId());
 			}
 		}
 	}
-	
-	private void insertBoardTagMapping(Long boardId, Long tagId) {
+	public void insertBoardTagMapping(Long boardId, Long tagId) {
 		boardMapper.regBoardTagMap(tagId,boardId);
 	}
 	
