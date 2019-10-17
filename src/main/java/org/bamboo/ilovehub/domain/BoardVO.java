@@ -1,12 +1,13 @@
 package org.bamboo.ilovehub.domain;
 
 import java.util.ArrayList;
+
 import lombok.Data;
 
 @Data
 public class BoardVO {
 	private Long boardId; //게시글 고유번호
-	private int preface; //머리말 코드
+	//private int preface; //머리말 코드
 	private int classificationCode; //게시판 분류코드
 	private String title; //제목
 	private String contents;//내용
@@ -17,4 +18,5 @@ public class BoardVO {
 	private char isPublic;//공개,비공개 여부
 	private char permitReply;//댓글허용 여부
 	private ArrayList<TagVO> tags; //tag
+	private BoardPrefaceVO preface;//머리말
 }

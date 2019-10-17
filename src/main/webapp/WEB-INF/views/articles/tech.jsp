@@ -291,6 +291,15 @@
                                                         <td>2019.12.30</td>
                                                         <td>1054</td>
                                                     </tr>
+                                                    <c:forEach var="board" items="${list}">
+                                                     <tr>
+                                                		<td><c:out value="${board.preface.codeExplain}"/></td>
+                                                        <td class="title"><c:out value="${board.title}"/></td>
+                                                        <td><c:out value="${board.writer}"/></td>
+                                                        <td><c:out value="${board.regDate}"/></td>
+                                                        <td><c:out value="${board.views}"/></td>
+                                                     </tr>
+                                                	</c:forEach>
                                                     <tr>
                                                         <td>기타</td>
                                                         <td class="title">직장이 멀때</td>
@@ -463,6 +472,11 @@
         	}
         	
         }
+    </script>
+    <script>
+    	const pageFlag='<c:out value="${board}" />';
+		window.addEventListener('DOMContentLoaded', function(){
+		});
     </script>
 </body>
 </html>

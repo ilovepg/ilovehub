@@ -15,7 +15,21 @@
   			<result property="codeExplain" column="code_explain"/>
 		</collection>
   	</resultMap>
-  	
+  	<resultMap id="getBoardsMap" type="org.bamboo.ilovehub.domain.BoardVO">
+  		<id property="boardId" column="board_id"/>
+  		<result property="classificationCode" column="classification_code"/>
+	    <result property="title" column="title"/>
+	    <result property="contents" column="contents"/>
+	    <result property="writer" column="writer"/>
+	    <result property="regDate" column="reg_date"/>
+	    <result property="views" column="views"/>
+	    <result property="recommendations" column="recommendations"/>
+	    <result property="contents" column="contents"/>
+	    <association property="preface" javaType="org.bamboo.ilovehub.domain.BoardPrefaceVO">
+  			<id property="code" column="classification_code"/>
+  			<result property="codeExplain" column="code_explain"/>
+		</association>
+  	</resultMap>
   	<!-- <resultMap id="ContainInitWriteVOMap" type="hashMap">
   		<id property="bcvo.classificationCode" column="classification_code"/>
   		<association property="bcvo" javaType="org.bamboo.ilovehub.domain.BoardClassificationVO">
@@ -44,7 +58,20 @@
 		order by
 			apc.order asc
   	</select>
-  	
+  	<select id="getBoards" parameterType="String" resultMap="getBoardsMap">
+  		select
+			b.*, apc.code, apc.code_explain
+		from
+			board b
+		inner join board_classification_code bcc on
+			b.classification_code = bcc.classification_code
+		left join article_preface_code apc on
+		    b.preface_code = apc.code
+		where
+			bcc.classification_text = 'tech' and b.is_del='N'
+		order by
+			board_id desc
+  	</select>
   	<insert id="regArticle" useGeneratedKeys="true" keyProperty="boardId" 
   			 parameterType="org.bamboo.ilovehub.domain.BoardVO">
   		insert into board (
@@ -57,14 +84,14 @@
 			is_public,
 			permit_reply 
 		)VALUES(
-			#{classificationCode},
-			#{preface},
-			#{title},
-			#{contents},
-			#{writer},
+			#{boardVO.classificationCode},
+			#{boardVO.preface.code},
+			#{boardVO.title},
+			#{boardVO.contents},
+			#{boardVO.writer},
 			CURRENT_TIMESTAMP(),
-			#{isPublic},
-			#{permitReply}
+			#{boardVO.isPublic},
+			#{boardVO.permitReply}
 		)
   	</insert>
   	<insert id="regTag" useGeneratedKeys="true" keyProperty="tagId"
@@ -74,5 +101,4 @@
   	<insert id="regBoardTagMap" parameterType="Long">
   		insert into board_tag_map (tag_id,board_id,reg_date) values (#{tagId},#{boardId},CURRENT_TIMESTAMP())
   	</insert>
-  	
   </mapper>

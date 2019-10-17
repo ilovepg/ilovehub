@@ -30,8 +30,8 @@ function handleSubmit(){
 	//태그
 	let tagValue = marginTag(); //Tag값 array로 변환		
 	const writeData = {
-		"preface":preface,
-		"classificationCode":classificationCode,
+		"preface":parseInt(preface), //int값으로 변경->vo안에 vo가 있으므로 Spring에서 자동으로 형변환을 못해주는듯
+		"classificationCode":classificationCode, //Spring에서 자동으로 String->int값으로 형반환해줌
 		"title":title,
 		"contents":contents,
 		"tags":tagValue,

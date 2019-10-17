@@ -21,6 +21,7 @@ public class ArticleServiceImpl implements ArticleService {
 	@Setter(onMethod_ = @Autowired)
 	BoardMapper boardMapper; //게시글 매퍼
 	
+	//글쓰기[공지,기술,자유]
 	@Transactional
 	public Map<String,Object> boardWrite(BoardVO vo){
 		Map<String,Object> result = new HashMap<String,Object>();
@@ -30,22 +31,25 @@ public class ArticleServiceImpl implements ArticleService {
 		
 		try {
 			int boardInsertResult=insertBoardBasic(vo);
-			if(boardInsertResult==1) { //board테이블에 insert성공
+			if(boardInsertResult>0) { //board테이블에 insert성공
 				Long boardId=vo.getBoardId();
 				insertBoardTags(vo.getTags(),boardId);
 			}
 		}catch(Exception e){
-			log.error(this.getClass().getSimpleName()+new Object(){}.getClass().getEnclosingMethod().getName()+" error:"+e.getMessage());
+			log.error(this.getClass().getSimpleName()+" "+new Object(){}.getClass().getEnclosingMethod().getName()+" error:"+e.getMessage());
 			throw new RuntimeException(e);
 		}
 		return result;
 	}
-	public int insertBoardBasic(BoardVO vo) {
+	//Board 테이블에 게시글 기본정보 저장
+	private int insertBoardBasic(BoardVO vo) {
 		int boardInsertResult=boardMapper.regArticle(vo);
 		log.info("boardId:"+vo.getBoardId());
 		return boardInsertResult;
 	}
-	public void insertBoardTags(List<TagVO> tags, Long boardId) {
+	//Board_Tag 테이블에 태그정보 저장, 이미 있는 태그일 경우 tagging_cnt컬럼 +1
+	private void insertBoardTags(List<TagVO> tags, Long boardId) {
+		//TODO : private로 바꿔보기
 		for(TagVO item:tags) {
 			int tagInsertResult=boardMapper.regTag(item);
 			//int tagInsertResult=boardMapper.regTag(null); //Transaction Test를 위함
@@ -55,10 +59,13 @@ public class ArticleServiceImpl implements ArticleService {
 			}
 		}
 	}
-	public void insertBoardTagMapping(Long boardId, Long tagId) {
+	//Board_Tag_Map 테이블에 board_id와 tag_id 맵핑
+	private void insertBoardTagMapping(Long boardId, Long tagId) {
+		//TODO : private로 바꿔보기
 		boardMapper.regBoardTagMap(tagId,boardId);
 	}
 	
+	//최초로 쓰기[write]에 접속하였을때 초기정보[머리말, 게시판분류코드] 가져오기
 	@Override
 	public ContainInitWriteVO getWriteInit(String classificationText) {
 		//예외처리 필요
@@ -70,8 +77,17 @@ public class ArticleServiceImpl implements ArticleService {
 			return vo;
 		}catch(Exception e) {
 			//log.error(this.getClass().getName()+" error:"+e.getMessage());
-			log.error(this.getClass().getSimpleName()+new Object(){}.getClass().getEnclosingMethod().getName()+" error:"+e.getMessage());
+			log.error(this.getClass().getSimpleName()+" "+new Object(){}.getClass().getEnclosingMethod().getName()+" error:"+e.getMessage());
 			return null;
 		}
+	}
+	
+	//게시글 리스트 가져오기 [공지,기술,자유]
+	@Override
+	public List<BoardVO> getBoards(String board) {
+		log.info("getBoardList Without Paging");
+		List<BoardVO>boards=boardMapper.getBoards(board);
+		log.info(boards.toString());
+		return boards;
 	}
 }

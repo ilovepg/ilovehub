@@ -31,7 +31,7 @@ public class ArticlesController {
 	//게시글 쓰기 백엔드 [공지,기술,자유]
 	@RequestMapping(value= "/{board}", method = RequestMethod.POST,
 	consumes = MediaType.APPLICATION_JSON_VALUE,
-	headers = "Accept=application/json")
+	headers = "Accept=application/json;charset=utf-8;")
 	@ResponseBody
 	public Map<String,Object> boardWrite(@PathVariable String board,@RequestBody BoardVO vo) {
 		Map<String,Object> result = new HashMap<String,Object>();
@@ -44,6 +44,7 @@ public class ArticlesController {
 	@GetMapping("/{board}")
 	public void showBoard(@PathVariable("board")String board, Model model) {
 		model.addAttribute("board",board);
+		model.addAttribute("list",articleService.getBoards(board));
 	}
 	
 	//게시글 쓰기화면 [공지,기술,자유]
@@ -56,6 +57,7 @@ public class ArticlesController {
 			mv.addObject("bcvo",vo.getBcvo());
 			mv.addObject("bpvos",vo.getBpvos());
 		}else {
+			log.error(this.getClass().getSimpleName()+new Object(){}.getClass().getEnclosingMethod().getName()+"error: ContainInitWriteVO null");
 			mv.addObject("bcvo",null);
 			mv.addObject("bpvos",null);
 		}
