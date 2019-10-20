@@ -42,13 +42,13 @@ public class ArticleServiceImpl implements ArticleService {
 		return result;
 	}
 	//Board 테이블에 게시글 기본정보 저장
-	private int insertBoardBasic(BoardVO vo) {
+	public int insertBoardBasic(BoardVO vo) {
 		int boardInsertResult=boardMapper.regArticle(vo);
 		log.info("boardId:"+vo.getBoardId());
 		return boardInsertResult;
 	}
 	//Board_Tag 테이블에 태그정보 저장, 이미 있는 태그일 경우 tagging_cnt컬럼 +1
-	private void insertBoardTags(List<TagVO> tags, Long boardId) {
+	public void insertBoardTags(List<TagVO> tags, Long boardId) {
 		//TODO : private로 바꿔보기
 		for(TagVO item:tags) {
 			int tagInsertResult=boardMapper.regTag(item);
@@ -60,7 +60,7 @@ public class ArticleServiceImpl implements ArticleService {
 		}
 	}
 	//Board_Tag_Map 테이블에 board_id와 tag_id 맵핑
-	private void insertBoardTagMapping(Long boardId, Long tagId) {
+	public void insertBoardTagMapping(Long boardId, Long tagId) {
 		//TODO : private로 바꿔보기
 		boardMapper.regBoardTagMap(tagId,boardId);
 	}

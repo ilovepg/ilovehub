@@ -40,6 +40,7 @@ public class ArticlesController {
 		result.put("result", "success");
 		return result;
 	}
+	
 	//게시글 리스트화면 [공지,기술,자유]
 	@GetMapping("/{board}")
 	public void showBoard(@PathVariable("board")String board, Model model) {
@@ -64,4 +65,5 @@ public class ArticlesController {
 		log.info("/articles/"+board+"/write view");
 		return mv;
 	}
+	
 }

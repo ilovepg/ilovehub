@@ -72,7 +72,7 @@
 		order by
 			board_id desc
   	</select>
-  	<insert id="regArticle" useGeneratedKeys="true" keyProperty="boardId" 
+  	<insert id="regArticle" useGeneratedKeys="true" keyProperty="boardVO.boardId" 
   			 parameterType="org.bamboo.ilovehub.domain.BoardVO">
   		insert into board (
   			classification_code,

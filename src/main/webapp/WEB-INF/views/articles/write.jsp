@@ -321,7 +321,7 @@
 															<!-- /.panel-heading -->
 															<div class="panel-body">
 																<div class="uploadDiv">
-																	<input type='file' multiple>
+																	<input name='uploadFile' type='file' multiple/>
 																</div>
 															</div>
 														</div>
@@ -356,7 +356,7 @@
 		<!-- 
 			서버에서 온 값 JSTL로 받아준다.
 			JS를 나누면(import) JSTL에 접근하지 못하므로 <input hidden>에 넣으려다가 이런식으로 넣는다.
-			아레에서 import하는 write_common.js에서 사용하는 변수들
+			아래에서 import하는 write_common.js에서 사용하는 변수들
 		 -->
 		<script>
 			<!-- noti,free,tech 등등과 같은 게시판 종류 -->
@@ -365,5 +365,117 @@
 			const classificationCode = '<c:out value="${bcvo.classificationCode}" />';
 		</script>
 		<script src="/resources/js/custom/write_common.js"></script>
+		
+		<!-- File Upload 관련 -->
+		<script>
+			const regex = new RegExp("(.*?)\.(exe|sh|alz)$"); //제외시킬 확장자명 정규식
+		  	const maxSingleFileSize = 20971520; //20MB 하나의 파일이 업로드될 수 있는 최대 크기
+		  	const maxFilesSize = 52428800; //50MB 모든 파일크기가 이 값을 넘을 순 없다.
+		  	let sumFilesSize=0; //파일 예외처리 할 때 모든 파일 사이즈의 합
+		  	
+			window.addEventListener('DOMContentLoaded', function(){
+				const inputFile = document.querySelector("input[name='uploadFile']");
+				inputFile.addEventListener("change",fileUploadHandler);
+			});
+			
+			//파일 업로드 핸들러 함수
+			function fileUploadHandler(){
+				const files = this.files;
+				sumFilesSize=0; //파일 업로드함수가 호출될 때 마다 이 값은 초기화 되어야한다.
+				
+				const formData = new FormData();
+				for(let i=0; i<files.length; i++){ //예외처리
+					if(!checkExtension(files[i].name, files[i].size)){
+						console.log("file upload failed:"+files[i].name)
+						return false;
+					}
+					formData.append("uploadFile",files[i]);
+				}
+				for (var value of formData.values()) {
+
+					  console.log(value);
+
+					}				
+				
+				const url = '/files';
+				
+				
+				var xhr = new XMLHttpRequest();
+	            xhr.open("POST",url);
+	            xhr.onload = function(e) {
+	                if(this.status == 200) {
+	                    console.log("Result : "+e.currentTarget.responseText);
+	                }
+	            }
+	            xhr.send(formData);
+				
+				/*
+				const xhr = new XMLHttpRequest();
+				xhr.upload.onprogress = function (e){
+					let percent = e.loaded * 100 / e.total;
+					//console.log(`file:${percent}`);
+					console.log("file:"+percent);
+				}
+				xhr.onload=function(){
+					if (xhr.status === 200 || xhr.status === 201) {
+					    console.log(xhr.responseText);
+					}else {
+						console.error(xhr.responseText);
+					}
+				};
+				xhr.open('post', url, true);
+	            //xhr.setRequestHeader("Content-Type","multipart/form-data");
+	            xhr.send(formData);
+				*/
+			}
+			
+			//실제로 파일 업로드하는 함수
+			function fileUplaod(files){
+				const formData = new FormData();
+				for(let i=0; i<files.length; i++){ //예외처리
+					formData.append("uploadFile",files[i]);
+				}
+				const url = '/files'
+				const xhr = new XMLHttpRequest();
+				xhr.upload.onprogress = function (e){
+					let percent = e.loaded * 100 / e.total;
+					//console.log(`file:${percent}`);
+					console.log("file:"+percent);
+				}
+				xhr.onload=function(){
+					if (xhr.status === 200 || xhr.status === 201) {
+					    console.log(xhr.responseText);
+					}else {
+						console.error(xhr.responseText);
+					}
+				};
+				xhr.open('post', url, true);
+	            //xhr.setRequestHeader("Content-Type","multipart/form-data");
+	            xhr.send(formData);
+			}
+			
+			
+			//파일 예외처리 함수
+			function checkExtension(fileName, fileSize){
+				if(fileSize >= maxSingleFileSize){ //단일 파일 사이즈 측정
+					alert(`${fileName} 파일 사이즈 초과 ${fileSize} / ${maxSingleFileSize}`);
+					console.log(`${fileName} 파일 사이즈 초과 ${fileSize}/${maxSingleFileSize}`);
+		  			return false;
+		  		}
+		  		if(regex.test(fileName)){ //파일의 확장자명 검사
+		  			alert(`${fileName}과 같은 확장자는 업로드할 수 없습니다.`);
+		  			console.log(`${fileName}과 같은 확장자는 업로드할 수 없습니다.`);
+		  			return false;
+		  		}
+		  		sumFilesSize+=fileSize;
+		  		if(sumFilesSize>=maxFilesSize){
+		  			alert(`모든 파일의 합이 최대 용량을 초과합니다. ${sumFilesSize}/${maxFilesSize}`);
+		  			console.log(`모든 파일의 합이 최대 용량을 초과합니다. ${sumFilesSize}/${maxFilesSize}`);
+		  			return false;
+		  		}
+		  		return true;
+			}
+			
+		</script>
 </body>
 </html>

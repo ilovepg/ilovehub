@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.bamboo.ilovehub.domain.BoardClassificationVO;
 import org.bamboo.ilovehub.domain.BoardPrefaceVO;
+import org.bamboo.ilovehub.domain.BoardVO;
 import org.bamboo.ilovehub.domain.ContainInitWriteVO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,8 +24,8 @@ public class BoardMapperTest {
 	@Setter(onMethod_ = @Autowired)
 	private BoardMapper mapper;
 	
-	@Test
-	public void test() {
+	//@Test
+	public void test_write화면맨처음진입시() {
 		ContainInitWriteVO vo = mapper.getWriteInit("tech");
 		//HashMap vo = mapper.getWriteInit("tech");
 		log.info(vo.toString());
@@ -39,5 +39,19 @@ public class BoardMapperTest {
 			map = new HashMap<String,Object>();
 		}
 		log.info(list.toString());
+	}
+	
+	@Test
+	public void regArticleTest_글쓰기테스트() {
+		BoardVO vo = new BoardVO();
+		vo.setClassificationCode(2);
+		vo.setPreface(new BoardPrefaceVO(2));
+		vo.setTitle("Test");
+		vo.setContents("Test입니다!!");
+		vo.setWriter("Tester");
+		vo.setIsPublic('Y');
+		vo.setPermitReply('Y');
+	  	mapper.regArticle(vo);
+			
 	}
 }
