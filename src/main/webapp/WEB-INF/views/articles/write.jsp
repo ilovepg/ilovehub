@@ -397,7 +397,7 @@
 						console.log("file upload failed:"+files[i].name)
 						return false;
 					}
-					preview(files[i],i);
+					previewHandler(files[i],i);
 					formData.append("uploadFile",files[i]);
 				}
 				fileUplaod(formData);
@@ -422,61 +422,46 @@
 				xhr.open('post', url, true);
 	            xhr.send(formData);
 			}
-			function preview(file,idx){
+			
+			function previewHandler(file,idx){
+				const type = file.type;
+				console.log("file type:"+type);
+				if(type.indexOf('image')>-1)
+					previewImage(file,idx);
+				else
+					previewFile(file,idx,type);
 				
-				console.log(file.type);
+			}
+			function previewFile(file,idx,type){
+				if(type.indexOf('spreadsheetml')>-1)
+					console.log("spread");
+				else if(type.indexOf('vnd.ms-excel')>-1)
+					console.log("gggg excel");
+				
+				let html = '<div class="thumb"> \
+					<div class="close" data-idx="' + idx + '">X</div> \
+					<i class="fa fa-file-excel-o fa-10" aria-hidden="true"></i>\
+					</div>';
+				$("#thumbnails").append(html);
+				
+			}
+			
+			//이미지 썸네일 생성
+			function previewImage(file,idx){
 				const reader = new FileReader();
 				reader.onload=(function(f,idx){
 					return function(e){
+						//바닐라 자바스크립트로 짠 코드는 EverNode 코드모음 노트북에 있으니 보려면 거기로 가야함.						
 						//문자열의 뒤에 '\' 를 사용한것은 es5 형식의 멀티 라인 문자열을 의미합니다. '\' 뒤에는 space를 포함한 아무런 문자가 없어야 합니다.
-						let html = '<div class="thumb"> \
+						 let html = '<div class="thumb"> \
 							<div class="close" data-idx="' + idx + '">X</div> \
 								<img src="' + e.target.result + '" /> \
 							</div>';
-						document.querySelector("#thumbnails").appendChild(html);
+						$("#thumbnails").append(html);
 					}	
 				})(file, idx);
 				reader.readAsDataURL(file);
 			}
-			/*
-			function preview(file,idx){
-				const reader = new FileReader();
-				reader.readAsDataURL(file);
-				reader.onload = function  () {
-				
-				let div = '<div class="thumb"> \
-					<div class="close" data-idx="' + idx + '">X</div> \
-					<img src="" title=""/> \
-					</div>';
-				document.querySelector("#thumbnails").appendChild(div);
-				
-				const tempImage = new Image(); 
-				tempImage.src=reader.result; //data-uri를 이미지 객체에 주입
-				tempImage.onload = function () {
-			           //리사이즈를 위해 캔버스 객체 생성
-			           const canvas = document.createElement('canvas');
-			           const canvasContext = canvas.getContext("2d");
-
-			           //캔버스 크기 설정
-			           canvas.width = 200; //가로 100px
-			           canvas.height = 200; //세로 100px
-
-			           //이미지를 캔버스에 그리기
-			           canvasContext.drawImage(this, 0, 0, 100, 100);
-
-			           //캔버스에 그린 이미지를 다시 data-uri 형태로 변환
-			           const dataURI = canvas.toDataURL("image/jpeg");
-
-			           //썸네일 이미지 보여주기
-			           //document.querySelector('#thumbnail').src = dataURI;
-
-			           //썸네일 이미지를 다운로드할 수 있도록 링크 설정
-			           //document.querySelector('#download').href = dataURI;
-			       };
-				}
-				
-			}*/
-			
 			
 			//파일 예외처리 함수
 			function checkExtension(fileName, fileSize){
