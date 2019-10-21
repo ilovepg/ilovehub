@@ -21,7 +21,6 @@ public class FilesController {
 	@RequestMapping(value="/files", method=RequestMethod.POST, headers=("content-type=multipart/*"))
 	public void fileUpload(@RequestParam("uploadFile") MultipartFile[] uploadFiles) {
 		log.info("upload Files Controller");
-		log.info(uploadFiles[0].getOriginalFilename());
-		//fileService.uploadFiles(uploadFiles);
+		fileService.uploadFiles(uploadFiles);
 	}
 }

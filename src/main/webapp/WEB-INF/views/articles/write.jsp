@@ -73,6 +73,12 @@
 	cursor: pointer;
 	margin-left: 8px;
 }
+
+/* 파일 업로드 관련 */
+.thumb { width:200px; padding:5px; float:left; }
+.thumb > img { width:100%; }
+.thumb > .close { position:absolute; background-color:red; cursor:pointer;
+
 </style>
 </head>
 
@@ -330,9 +336,11 @@
 												<!-- 첨부파일 업로드 결과 -->
 												<div class="row">
 													<div class="col-md-12">
-														<div class='uploadResult'>
-															<ul></ul>
+														<div id="thumbnails">
 														</div>
+														<!-- <div class='uploadResult'>
+															<ul></ul>
+														</div> -->
 													</div>
 												</div>
 											</div>
@@ -389,52 +397,14 @@
 						console.log("file upload failed:"+files[i].name)
 						return false;
 					}
+					preview(files[i],i);
 					formData.append("uploadFile",files[i]);
 				}
-				for (var value of formData.values()) {
-
-					  console.log(value);
-
-					}				
-				
-				const url = '/files';
-				
-				
-				var xhr = new XMLHttpRequest();
-	            xhr.open("POST",url);
-	            xhr.onload = function(e) {
-	                if(this.status == 200) {
-	                    console.log("Result : "+e.currentTarget.responseText);
-	                }
-	            }
-	            xhr.send(formData);
-				
-				/*
-				const xhr = new XMLHttpRequest();
-				xhr.upload.onprogress = function (e){
-					let percent = e.loaded * 100 / e.total;
-					//console.log(`file:${percent}`);
-					console.log("file:"+percent);
-				}
-				xhr.onload=function(){
-					if (xhr.status === 200 || xhr.status === 201) {
-					    console.log(xhr.responseText);
-					}else {
-						console.error(xhr.responseText);
-					}
-				};
-				xhr.open('post', url, true);
-	            //xhr.setRequestHeader("Content-Type","multipart/form-data");
-	            xhr.send(formData);
-				*/
+				fileUplaod(formData);
 			}
 			
 			//실제로 파일 업로드하는 함수
-			function fileUplaod(files){
-				const formData = new FormData();
-				for(let i=0; i<files.length; i++){ //예외처리
-					formData.append("uploadFile",files[i]);
-				}
+			function fileUplaod(formData){
 				const url = '/files'
 				const xhr = new XMLHttpRequest();
 				xhr.upload.onprogress = function (e){
@@ -450,9 +420,62 @@
 					}
 				};
 				xhr.open('post', url, true);
-	            //xhr.setRequestHeader("Content-Type","multipart/form-data");
 	            xhr.send(formData);
 			}
+			function preview(file,idx){
+				
+				console.log(file.type);
+				const reader = new FileReader();
+				reader.onload=(function(f,idx){
+					return function(e){
+						//문자열의 뒤에 '\' 를 사용한것은 es5 형식의 멀티 라인 문자열을 의미합니다. '\' 뒤에는 space를 포함한 아무런 문자가 없어야 합니다.
+						let html = '<div class="thumb"> \
+							<div class="close" data-idx="' + idx + '">X</div> \
+								<img src="' + e.target.result + '" /> \
+							</div>';
+						document.querySelector("#thumbnails").appendChild(html);
+					}	
+				})(file, idx);
+				reader.readAsDataURL(file);
+			}
+			/*
+			function preview(file,idx){
+				const reader = new FileReader();
+				reader.readAsDataURL(file);
+				reader.onload = function  () {
+				
+				let div = '<div class="thumb"> \
+					<div class="close" data-idx="' + idx + '">X</div> \
+					<img src="" title=""/> \
+					</div>';
+				document.querySelector("#thumbnails").appendChild(div);
+				
+				const tempImage = new Image(); 
+				tempImage.src=reader.result; //data-uri를 이미지 객체에 주입
+				tempImage.onload = function () {
+			           //리사이즈를 위해 캔버스 객체 생성
+			           const canvas = document.createElement('canvas');
+			           const canvasContext = canvas.getContext("2d");
+
+			           //캔버스 크기 설정
+			           canvas.width = 200; //가로 100px
+			           canvas.height = 200; //세로 100px
+
+			           //이미지를 캔버스에 그리기
+			           canvasContext.drawImage(this, 0, 0, 100, 100);
+
+			           //캔버스에 그린 이미지를 다시 data-uri 형태로 변환
+			           const dataURI = canvas.toDataURL("image/jpeg");
+
+			           //썸네일 이미지 보여주기
+			           //document.querySelector('#thumbnail').src = dataURI;
+
+			           //썸네일 이미지를 다운로드할 수 있도록 링크 설정
+			           //document.querySelector('#download').href = dataURI;
+			       };
+				}
+				
+			}*/
 			
 			
 			//파일 예외처리 함수

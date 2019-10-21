@@ -473,10 +473,5 @@
         	
         }
     </script>
-    <script>
-    	const pageFlag='<c:out value="${board}" />';
-		window.addEventListener('DOMContentLoaded', function(){
-		});
-    </script>
 </body>
 </html>
