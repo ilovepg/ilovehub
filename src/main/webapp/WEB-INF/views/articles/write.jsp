@@ -75,9 +75,18 @@
 }
 
 /* 파일 업로드 관련 */
-.thumb { width:200px; padding:5px; float:left; }
-.thumb > img { width:100%; }
-.thumb > .close { position:absolute; background-color:red; cursor:pointer;
+.thumb { width:70px; padding:5px; float:left; position:relative;}
+.thumb > img:nth-child(even) { width:100%; }
+.thumb > img:nth-child(odd) { } 
+.thumb > .close {
+	width:20px; 
+	height:20px; 
+	cursor:pointer; 
+	opacity:10;
+	position:absolute;
+	left:45px;
+	top:-1px;
+}
 
 </style>
 </head>
@@ -432,18 +441,30 @@
 					previewFile(file,idx,type);
 				
 			}
+			
+			//파일 썸네일 생성
 			function previewFile(file,idx,type){
-				if(type.indexOf('spreadsheetml')>-1)
-					console.log("spread");
-				else if(type.indexOf('vnd.ms-excel')>-1)
-					console.log("gggg excel");
+				let icon="";
+				if(type.indexOf('ms-excel')>-1 || type.indexOf('spreadsheetml')>-1)
+					icon='<img src="/resources/icon/excel-240.png" />';
+				else if(type.indexOf('presentationml.presentation')>-1)
+					icon='<img src="/resources/icon/powerpoint-240.png" />';
+				else if(type.indexOf('wordprocessingml.document')>-1)
+					icon='<img src="/resources/icon/word-240.png" />';
+				else if(type.indexOf('text/html')>-1)
+					icon='<img src="/resources/icon/HTML-512.png" />';
+				else
+					icon='<img src="/resources/icon/File-512.png" />';
 				
 				let html = '<div class="thumb"> \
-					<div class="close" data-idx="' + idx + '">X</div> \
-					<i class="fa fa-file-excel-o fa-10" aria-hidden="true"></i>\
+					<img class="close" src="/resources/icon/file_del-256.png" data-idx="' + idx + '"/> \
+						' + icon + ' \
 					</div>';
+					/* html = '<div class="thumb"> \
+						<div class="close" data-idx="' + idx + '">X</div> \
+							' + icon + ' \
+						</div>'; */
 				$("#thumbnails").append(html);
-				
 			}
 			
 			//이미지 썸네일 생성
@@ -454,7 +475,7 @@
 						//바닐라 자바스크립트로 짠 코드는 EverNode 코드모음 노트북에 있으니 보려면 거기로 가야함.						
 						//문자열의 뒤에 '\' 를 사용한것은 es5 형식의 멀티 라인 문자열을 의미합니다. '\' 뒤에는 space를 포함한 아무런 문자가 없어야 합니다.
 						 let html = '<div class="thumb"> \
-							<div class="close" data-idx="' + idx + '">X</div> \
+// 							 	<img class="close" src="/resources/icon/file_del-256.png" data-idx="' + idx + '"/> \
 								<img src="' + e.target.result + '" /> \
 							</div>';
 						$("#thumbnails").append(html);
