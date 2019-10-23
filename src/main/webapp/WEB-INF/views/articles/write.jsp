@@ -475,6 +475,7 @@
 						//바닐라 자바스크립트로 짠 코드는 EverNode 코드모음 노트북에 있으니 보려면 거기로 가야함.						
 						//문자열의 뒤에 '\' 를 사용한것은 es5 형식의 멀티 라인 문자열을 의미합니다. '\' 뒤에는 space를 포함한 아무런 문자가 없어야 합니다.
 						 let html = '<div class="thumb"> \
+							 	<progress value="0" max="100" ></progress> \ 
 // 							 	<img class="close" src="/resources/icon/file_del-256.png" data-idx="' + idx + '"/> \
 								<img src="' + e.target.result + '" /> \
 							</div>';
