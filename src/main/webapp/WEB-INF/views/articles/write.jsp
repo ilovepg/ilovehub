@@ -38,7 +38,7 @@
 .main-content-inner .card label.header, .main-content-inner .card h3 {
 	margin-bottom: 0.25em;
 	padding: 0.25em 0.5em;
-	opacity: 0.75;
+/* 	opacity: 0.75; */
 	font-size: 1.17em;
 	font-weight: bold;
 	display: inline;
@@ -76,8 +76,7 @@
 
 /* 파일 업로드 관련 */
 .thumb { width:70px; padding:5px; float:left; position:relative;}
-.thumb > img:nth-child(even) { width:100%; }
-.thumb > img:nth-child(odd) { } 
+.thumb > img.icon { width:100%; }
 .thumb > .close {
 	width:20px; 
 	height:20px; 
@@ -85,7 +84,7 @@
 	opacity:10;
 	position:absolute;
 	left:45px;
-	top:-1px;
+	//top:-1px;
 }
 
 </style>
@@ -389,6 +388,7 @@
 		  	const maxSingleFileSize = 20971520; //20MB 하나의 파일이 업로드될 수 있는 최대 크기
 		  	const maxFilesSize = 52428800; //50MB 모든 파일크기가 이 값을 넘을 순 없다.
 		  	let sumFilesSize=0; //파일 예외처리 할 때 모든 파일 사이즈의 합
+		  	let idx=0; //파일의 일련번호라고 생각하면됨.
 		  	
 			window.addEventListener('DOMContentLoaded', function(){
 				const inputFile = document.querySelector("input[name='uploadFile']");
@@ -400,26 +400,31 @@
 				const files = this.files;
 				sumFilesSize=0; //파일 업로드함수가 호출될 때 마다 이 값은 초기화 되어야한다.
 				
-				const formData = new FormData();
 				for(let i=0; i<files.length; i++){ //예외처리
 					if(!checkExtension(files[i].name, files[i].size)){
 						console.log("file upload failed:"+files[i].name)
 						return false;
 					}
-					previewHandler(files[i],i);
-					formData.append("uploadFile",files[i]);
+					previewHandler(files[i],idx);
+					
+					files[i].target=idx;
+					idx++; //파일의 일련번호라고 생각하면됨.
+					fileUplaod(files[i]);
 				}
-				fileUplaod(formData);
 			}
 			
 			//실제로 파일 업로드하는 함수
-			function fileUplaod(formData){
+			function fileUplaod(file){
+				const formData = new FormData();
+				formData.append("uploadFile",file);
+				
 				const url = '/files'
 				const xhr = new XMLHttpRequest();
 				xhr.upload.onprogress = function (e){
 					let percent = e.loaded * 100 / e.total;
-					//console.log(`file:${percent}`);
 					console.log("file:"+percent);
+					console.log("target:"+file.target);
+					setProgress(file.target,percent);
 				}
 				xhr.onload=function(){
 					if (xhr.status === 200 || xhr.status === 201) {
@@ -432,31 +437,32 @@
 	            xhr.send(formData);
 			}
 			
-			function previewHandler(file,idx){
+			//파일 미리보기 핸들러
+ 			function previewHandler(file,idx){
 				const type = file.type;
 				console.log("file type:"+type);
 				if(type.indexOf('image')>-1)
 					previewImage(file,idx);
 				else
 					previewFile(file,idx,type);
-				
 			}
 			
 			//파일 썸네일 생성
 			function previewFile(file,idx,type){
 				let icon="";
 				if(type.indexOf('ms-excel')>-1 || type.indexOf('spreadsheetml')>-1)
-					icon='<img src="/resources/icon/excel-240.png" />';
+					icon='<img class="icon" src="/resources/icon/excel-240.png" />';
 				else if(type.indexOf('presentationml.presentation')>-1)
-					icon='<img src="/resources/icon/powerpoint-240.png" />';
+					icon='<img class="icon" src="/resources/icon/powerpoint-240.png" />';
 				else if(type.indexOf('wordprocessingml.document')>-1)
-					icon='<img src="/resources/icon/word-240.png" />';
+					icon='<img class="icon" src="/resources/icon/word-240.png" />';
 				else if(type.indexOf('text/html')>-1)
-					icon='<img src="/resources/icon/HTML-512.png" />';
+					icon='<img class="icon" src="/resources/icon/HTML-512.png" />';
 				else
-					icon='<img src="/resources/icon/File-512.png" />';
+					icon='<img class="icon" src="/resources/icon/File-512.png" />';
 				
-				let html = '<div class="thumb"> \
+				let html = '<div class="thumb" data-idx="' + idx + '"> \
+					<progress value="0" max="100" ></progress>\
 					<img class="close" src="/resources/icon/file_del-256.png" data-idx="' + idx + '"/> \
 						' + icon + ' \
 					</div>';
@@ -474,15 +480,32 @@
 					return function(e){
 						//바닐라 자바스크립트로 짠 코드는 EverNode 코드모음 노트북에 있으니 보려면 거기로 가야함.						
 						//문자열의 뒤에 '\' 를 사용한것은 es5 형식의 멀티 라인 문자열을 의미합니다. '\' 뒤에는 space를 포함한 아무런 문자가 없어야 합니다.
-						 let html = '<div class="thumb"> \
-							 	<progress value="0" max="100" ></progress> \ 
-// 							 	<img class="close" src="/resources/icon/file_del-256.png" data-idx="' + idx + '"/> \
-								<img src="' + e.target.result + '" /> \
+						 let html = '<div class="thumb" data-idx="' + idx + '">\
+						 		<progress value="0" max="100" ></progress>\
+ 							 	<img class="close" src="/resources/icon/file_del-256.png" data-idx="' + idx + '"/> \
+								<img class="icon" src="' + e.target.result + '" />\
 							</div>';
 						$("#thumbnails").append(html);
 					}	
 				})(file, idx);
 				reader.readAsDataURL(file);
+			}
+			
+			//이거 만들기.. 좀 생각해야함. 삭제할수도있으니까.
+			function searchThumbs(){
+				
+			}
+			
+			//프로그래스 바 진행률 표시
+			function setProgress(target,percent){
+				const thumbnails=document.querySelector("#thumbnails");
+				const thumbs=thumbnails.querySelectorAll(".thumb");
+				thumbs.forEach(function(item){
+					if(item.dataset.idx==target){
+						const progress=item.querySelector("progress");
+						progress.value=percent;
+					}
+				});
 			}
 			
 			//파일 예외처리 함수
