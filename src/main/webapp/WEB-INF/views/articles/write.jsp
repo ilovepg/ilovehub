@@ -75,8 +75,25 @@
 }
 
 /* 파일 업로드 관련 */
-.thumb { width:70px; padding:5px; float:left; position:relative;}
-.thumb > img.icon { width:100%; }
+.thumb { 
+	/* width:70px; */ 
+	width:25%; 
+	padding-top: 25%;
+	float:left; 
+	position:relative; 
+	margin-right:30px;
+}
+.thumb > img.icon {
+	width:100%; 
+	max-width: 100%; 
+	height: auto;
+	max-height:75%;
+	position:absolute;
+	top: 0; 
+	left: 0; 
+	right: 0; 
+	bottom: 0; 
+}
 .thumb > .close {
 	width:20px; 
 	height:20px; 
@@ -84,9 +101,10 @@
 	opacity:10;
 	position:absolute;
 	left:45px;
-	//top:-1px;
 }
-
+.fileUploadprogress{
+	width:100%;
+}
 </style>
 </head>
 
@@ -462,9 +480,9 @@
 					icon='<img class="icon" src="/resources/icon/File-512.png" />';
 				
 				let html = '<div class="thumb" data-idx="' + idx + '"> \
-					<progress value="0" max="100" ></progress>\
 					<img class="close" src="/resources/icon/file_del-256.png" data-idx="' + idx + '"/> \
 						' + icon + ' \
+					<progress class="fileUploadprogress" value="0" max="100" ></progress>\
 					</div>';
 					/* html = '<div class="thumb"> \
 						<div class="close" data-idx="' + idx + '">X</div> \
@@ -481,9 +499,9 @@
 						//바닐라 자바스크립트로 짠 코드는 EverNode 코드모음 노트북에 있으니 보려면 거기로 가야함.						
 						//문자열의 뒤에 '\' 를 사용한것은 es5 형식의 멀티 라인 문자열을 의미합니다. '\' 뒤에는 space를 포함한 아무런 문자가 없어야 합니다.
 						 let html = '<div class="thumb" data-idx="' + idx + '">\
-						 		<progress value="0" max="100" ></progress>\
  							 	<img class="close" src="/resources/icon/file_del-256.png" data-idx="' + idx + '"/> \
 								<img class="icon" src="' + e.target.result + '" />\
+						 		<progress class="fileUploadprogress" value="0" max="100" ></progress>\
 							</div>';
 						$("#thumbnails").append(html);
 					}	
