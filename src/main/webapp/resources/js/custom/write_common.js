@@ -14,12 +14,9 @@ window.addEventListener('DOMContentLoaded', function(){
 //submit 전 최종작업
 function handleSubmit(){
 	event.preventDefault(); //submit의  기본 동작을 막는다.
-	//분류[머리말]
-	const preface = document.querySelector("select[name=preface]").value;
-	//제목
-	const title = document.querySelector("input[name=title]").value;
-	//내용
-	const contents=CKEDITOR.instances.editor.getData();
+	const preface = document.querySelector("select[name=preface]").value; //분류[머리말]
+	const title = document.querySelector("input[name=title]").value; //제목
+	const contents=CKEDITOR.instances.editor.getData(); //내용
 	//추후에 필요할 내용입력하는것
 	//CKEDITOR.instances.editor.setData(''); //태그포함입력
 	let isPublic = document.querySelector("input[name=is_public]").checked; //공개
