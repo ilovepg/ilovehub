@@ -440,10 +440,14 @@
 				const xhr = new XMLHttpRequest();
 				xhr.upload.onprogress = function (e){
 					let percent = e.loaded * 100 / e.total;
-					//if(progressbar!=undefined)
+					if(progressbar!=undefined)
 						setProgress(progressbar,percent);
-					//else
-						//progressbar=searchProgress(file.target);
+					else{
+						progressbar=searchProgress(file.target);
+						if(progressbar!=undefined){
+							setProgress(progressbar,percent);
+						}
+					}
 				}
 				xhr.onload=function(){
 					if (xhr.status === 200 || xhr.status === 201) {
@@ -457,16 +461,15 @@
 	            
 	           //'x'버튼을 눌렀을 때 전송중지하기 위한 이벤트
 	           //x버튼 객체를 찾는다.
-	           const thumbs=document.querySelectorAll("div#thumbnails div.thumb");
-	           let close="";
-	           thumbs.forEach(function(thumb){
-					if(thumb.dataset.idx==file.target){
-						close=thumb.querySelector("img.close");
+	           const closes=document.querySelectorAll('img[class=close]');
+	           closes.forEach(function(close){
+	        	  if(close.dataset.idx==file.target){
+						close.addEventListener("click",function(){
+				        	console.log(xhr);
+				        	xhr.abort();
+				        });
 					}
-				});
-	           close.addEventListener("click",function(xhr){
-	        	  console.log(xhr); 
-	           }); 
+	           });
 			}
 			
 			//파일 미리보기 핸들러
@@ -503,18 +506,24 @@
 			
 			//이미지 썸네일 생성
 			function previewImage(file,idx){
+				//바닐라 자바스크립트로 짠 코드는 evernote '코드모음'에 있으니 보려면 거기로 가야함.						
+				//문자열의 뒤에 '\' 를 사용한것은 es5 형식의 멀티 라인 문자열을 의미합니다. '\' 뒤에는 space를 포함한 아무런 문자가 없어야 합니다.
+				let html = '<div class="thumb" data-idx="' + idx + '">\
+		 		<progress class="fileUploadprogress" value="0" max="100" ></progress>\
+				 	<img class="close" src="/resources/icon/file_del-256.png" data-idx="' + idx + '"/> \
+				</div>';
+				$("#thumbnails").append(html);
+				
 				const reader = new FileReader();
 				reader.onload=(function(f,idx){
 					return function(e){
-						//바닐라 자바스크립트로 짠 코드는 evernote '코드모음'에 있으니 보려면 거기로 가야함.						
-						//문자열의 뒤에 '\' 를 사용한것은 es5 형식의 멀티 라인 문자열을 의미합니다. '\' 뒤에는 space를 포함한 아무런 문자가 없어야 합니다.
-						 let html = '<div class="thumb" data-idx="' + idx + '">\
-								<img class="icon" src="' + e.target.result + '" />\
- 							 	<img class="close" src="/resources/icon/file_del-256.png" data-idx="' + idx + '"/> \
-						 		<progress class="fileUploadprogress" value="0" max="100" ></progress>\
-							</div>';
-						$("#thumbnails").append(html);
-					}	
+						document.querySelectorAll(".thumb").forEach(function(item){
+							if(item.dataset.idx==idx){
+								let html = '<img class="icon" src="' + e.target.result + '" />';
+								$(item).prepend(html);
+							}
+						});
+ 					}
 				})(file, idx);
 				reader.readAsDataURL(file);
 			}
