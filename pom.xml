@@ -192,6 +192,14 @@
 		    <version>2.8.6</version>
 		</dependency>
 		
+		<!-- Thumbnilator -->
+		<!-- https://mvnrepository.com/artifact/net.coobird/thumbnailator -->
+		<dependency>
+		    <groupId>net.coobird</groupId>
+		    <artifactId>thumbnailator</artifactId>
+		    <version>0.4.8</version>
+		</dependency>
+		
 		<!-- Test -->
 		<!-- Spring 4.x 버전 이상을 테스트 하기 위해서는 Junit 4.10이상 필수 -->
 		<dependency>
