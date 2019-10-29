@@ -75,8 +75,28 @@
 }
 
 /* 파일 업로드 관련 */
+/* 파일 노멀버튼 변경 */
+.btn-file{
+	position: relative;
+	overflow: hidden;
+}
+.btn-file input[type=file] {
+	position: absolute;
+	top: 0;
+	right: 0;
+	min-width: 100%;
+	min-height: 100%;
+	font-size: 100px;
+	text-align: right;
+	filter: alpha(opacity=0);
+	opacity: 0;
+	outline: none;
+	background: white;
+	cursor: inherit;
+	display: block;
+}
+/* 파일 썸네일 및 프로그래스 바 */
 .thumb { 
-	/* width:70px; */ 
 	width:25%; 
 	padding-top: 25%;
 	float:left; 
@@ -346,13 +366,15 @@
 												<div class="row">
 													<div class="col-md-12">
 														<div class="panel panel-default">
-															<div class="panel-heading">
+															<!-- <div class="panel-heading">
 																<h3>첨부파일</h3>
-															</div>
+															</div> -->
 															<!-- /.panel-heading -->
 															<div class="panel-body">
 																<div class="uploadDiv">
-																	<input name='uploadFile' type='file' multiple/>
+																	<label class="btn btn-primary btn-file">
+																		업로드<input name="uploadFile" type="file" multiple/>
+																	</label>
 																</div>
 															</div>
 														</div>
@@ -363,9 +385,6 @@
 													<div class="col-md-12">
 														<div id="thumbnails">
 														</div>
-														<!-- <div class='uploadResult'>
-															<ul></ul>
-														</div> -->
 													</div>
 												</div>
 											</div>
