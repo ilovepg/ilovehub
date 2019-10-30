@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import lombok.Data;
 
+//게시글VO
 @Data
 public class BoardVO {
 	private Long boardId; //게시글 고유번호
