@@ -121,6 +121,12 @@
 	opacity:10;
 	position:absolute;
 }
+.thumb div.fileName{ /* 파일이름이 길경우에는 '....' 표시 */
+	width:100%;
+	text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
 .fileUploadprogress{
 	width:100%;
 }
@@ -470,7 +476,8 @@
 				}
 				xhr.onload=function(){
 					if (xhr.status === 200 || xhr.status === 201) {
-					    console.log(xhr.responseText);
+					    const result = JSON.parse(xhr.responseText);
+					    console.log(result);
 					}else {
 						console.error(xhr.responseText);
 					}
@@ -515,23 +522,31 @@
 				else //그 외
 					icon='<img class="icon" src="/resources/icon/File-512.png" />';
 				
-				let html = '<div class="thumb" data-idx="' + idx + '"> \
+				let $html = $('<div class="thumb" data-idx="' + idx + '"> \
 						' + icon + ' \
+					<div class="fileName" data-toggle="tooltip" data-placement="top">\
+						<span>' + file.name + '</span>\
+					</div>\
 					<progress class="fileUploadprogress" value="0" max="100" ></progress>\
 					<img class="close" src="/resources/icon/file_del-256.png" data-idx="' + idx + '"/> \
-					</div>';
-				$("#thumbnails").append(html);
+					</div>');
+				$("#thumbnails").append($html);
+				$html.find(".fileName").attr("title",file.name); //html에다가 쓰면 띄어쓰기 때문에 제대로 안나옴. 이렇게 따로해줘야함.
 			}
 			
 			//이미지 썸네일 생성
 			function previewImage(file,idx){
 				//바닐라 자바스크립트로 짠 코드는 evernote '코드모음'에 있으니 보려면 거기로 가야함.						
 				//문자열의 뒤에 '\' 를 사용한것은 es5 형식의 멀티 라인 문자열을 의미합니다. '\' 뒤에는 space를 포함한 아무런 문자가 없어야 합니다.
-				let html = '<div class="thumb" data-idx="' + idx + '">\
+				let html = $('<div class="thumb" data-idx="' + idx + '">\
+				<div class="fileName" data-toggle="tooltip" data-placement="top">\
+					<span>' + file.name + '</span>\
+				</div>\
 		 		<progress class="fileUploadprogress" value="0" max="100" ></progress>\
 				 	<img class="close" src="/resources/icon/file_del-256.png" data-idx="' + idx + '"/> \
-				</div>';
+				</div>');
 				$("#thumbnails").append(html);
+				$html.find(".fileName").attr("title",file.name); //html에다가 쓰면 띄어쓰기 때문에 제대로 안나옴. 이렇게 따로해줘야함.
 				
 				const reader = new FileReader();
 				reader.onload=(function(f,idx){
