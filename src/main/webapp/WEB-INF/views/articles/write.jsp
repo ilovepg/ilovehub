@@ -460,7 +460,7 @@
 				const formData = new FormData();
 				formData.append("uploadFile",file);
 				
-				let progressbar=searchProgress(file.target);
+				let progressbar=file.dom[0].querySelector("progressbar");
 				const url = '/files'
 				const xhr = new XMLHttpRequest();
 				xhr.upload.onprogress = function (e){
@@ -486,16 +486,10 @@
 	            xhr.send(formData);
 	            
 	           //'x'버튼을 눌렀을 때 전송중지하기 위한 이벤트
-	           //x버튼 객체를 찾는다.
-	           const closes=document.querySelectorAll('img[class=close]');
-	           closes.forEach(function(close){
-	        	  if(close.dataset.idx==file.target){
-						close.addEventListener("click",function(){
-				        	console.log(xhr);
-				        	xhr.abort();
-				        });
-					}
-	           });
+	           const close=file.dom[0].querySelector("img.close");
+		       close.addEventListener("click",function(){
+					xhr.abort();
+				});
 			}
 			
 			//파일 미리보기 핸들러
@@ -532,20 +526,21 @@
 					</div>');
 				$("#thumbnails").append($html);
 				$html.find(".fileName").attr("title",file.name); //html에다가 쓰면 띄어쓰기 때문에 제대로 안나옴. 이렇게 따로해줘야함.
+				file.dom=$html;
 			}
 			
 			//이미지 썸네일 생성
 			function previewImage(file,idx){
 				//바닐라 자바스크립트로 짠 코드는 evernote '코드모음'에 있으니 보려면 거기로 가야함.						
 				//문자열의 뒤에 '\' 를 사용한것은 es5 형식의 멀티 라인 문자열을 의미합니다. '\' 뒤에는 space를 포함한 아무런 문자가 없어야 합니다.
-				let html = $('<div class="thumb" data-idx="' + idx + '">\
+				let $html = $('<div class="thumb" data-idx="' + idx + '">\
 				<div class="fileName" data-toggle="tooltip" data-placement="top">\
 					<span>' + file.name + '</span>\
 				</div>\
 		 		<progress class="fileUploadprogress" value="0" max="100" ></progress>\
 				 	<img class="close" src="/resources/icon/file_del-256.png" data-idx="' + idx + '"/> \
 				</div>');
-				$("#thumbnails").append(html);
+				$("#thumbnails").append($html);
 				$html.find(".fileName").attr("title",file.name); //html에다가 쓰면 띄어쓰기 때문에 제대로 안나옴. 이렇게 따로해줘야함.
 				
 				const reader = new FileReader();
@@ -560,22 +555,7 @@
  					}
 				})(file, idx);
 				reader.readAsDataURL(file);
-			}
-			
-			/*
-				프로그래스바 찾는 함수	
-				@param target:자신의 프로그래스 바를 특정할 수 있는 idx
-			*/
-			function searchProgress(target){
-				let progressBar;
-				const thumbnails=document.querySelector("#thumbnails");
-				const thumbs=thumbnails.querySelectorAll(".thumb");
-				thumbs.forEach(function(item){
-					if(item.dataset.idx==target){
-						progressBar=item.querySelector("progress");
-					}
-				});
-				return progressBar;
+				file.dom=$html;
 			}
 			
 			/*	
