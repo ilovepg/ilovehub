@@ -459,37 +459,32 @@
 			function fileUplaod(file){
 				const formData = new FormData();
 				formData.append("uploadFile",file);
+				let progressbar=file.dom[0].querySelector("progress");
 				
-				let progressbar=file.dom[0].querySelector("progressbar");
-				const url = '/files'
+				const url = '/files';
 				const xhr = new XMLHttpRequest();
 				xhr.upload.onprogress = function (e){
 					let percent = e.loaded * 100 / e.total;
-					if(progressbar!=undefined)
-						setProgress(progressbar,percent);
-					else{
-						progressbar=searchProgress(file.target);
-						if(progressbar!=undefined){
-							setProgress(progressbar,percent);
-						}
-					}
+					setProgress(progressbar,percent);
 				}
 				xhr.onload=function(){
 					if (xhr.status === 200 || xhr.status === 201) {
-					    const result = JSON.parse(xhr.responseText);
+					    const result = JSON.parse(xhr.responseText); //서버에서 온 응답
 					    console.log(result);
+					    const thumb=file.dom[0].querySelector(".thumb");
 					}else {
+						alert("file upload error");
 						console.error(xhr.responseText);
 					}
 				};
 				xhr.open('post', url, true);
 	            xhr.send(formData);
 	            
-	           //'x'버튼을 눌렀을 때 전송중지하기 위한 이벤트
-	           const close=file.dom[0].querySelector("img.close");
-		       close.addEventListener("click",function(){
+	            //'x'버튼을 눌렀을 때 전송중지하기 위한 이벤트
+	            const close=file.dom[0].querySelector("img.close");
+		        close.addEventListener("click",function(){
 					xhr.abort();
-				});
+			    });
 			}
 			
 			//파일 미리보기 핸들러
