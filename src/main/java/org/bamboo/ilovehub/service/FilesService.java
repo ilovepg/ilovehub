@@ -8,4 +8,6 @@ import org.springframework.web.multipart.MultipartFile;
 public interface FilesService {
 	//첨부파일 업로드
 	public ResponseEntity<AttachFileVO> uploadFile(MultipartFile uploadFile);
+	//첨부파일 삭제
+	public ResponseEntity<String> deleteFile(AttachFileVO attachFileVO);
 }

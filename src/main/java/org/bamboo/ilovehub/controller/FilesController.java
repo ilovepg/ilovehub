@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,13 +22,21 @@ public class FilesController {
 	@Setter(onMethod_ = @Autowired)
 	private FilesService fileService;
 	
-	//게시글 파일 업로드[Ajax]
+	//첨부파일 업로드[Ajax]
 	@RequestMapping(value="/files", method=RequestMethod.POST, 
 			headers=("content-type=multipart/*"),
 			produces=MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@ResponseBody
-	public ResponseEntity<AttachFileVO> fileUpload(@RequestParam("uploadFile") MultipartFile uploadFile) {
+	public ResponseEntity<AttachFileVO> uploadFile(@RequestParam("uploadFile") MultipartFile uploadFile) {
 		log.info("upload Files Controller");
 		return fileService.uploadFile(uploadFile);
+	}
+	
+	//첨부파일 삭제
+	@RequestMapping(value="/files", method=RequestMethod.DELETE,
+			headers = "Accept=application/json;charset=utf-8;")
+	public ResponseEntity<String> deleteFile(@RequestBody AttachFileVO attachFileVO) {
+		log.info("fileDelete vo :"+attachFileVO);
+		return fileService.deleteFile(attachFileVO);
 	}
 }

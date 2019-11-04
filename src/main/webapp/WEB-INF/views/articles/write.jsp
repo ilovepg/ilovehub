@@ -431,10 +431,11 @@
 		  	const maxFilesSize = 52428800; //50MB 모든 파일크기가 이 값을 넘을 순 없다.
 		  	let sumFilesSize=0; //파일 예외처리 할 때 모든 파일 사이즈의 합
 		  	let idx=0; //파일의 일련번호라고 생각하면됨.
-		  	
+		  	let cloneUploadDiv; //<input type='file'> 초기화를 위한 초기 아무것도 없는 복제DOM
 			window.addEventListener('DOMContentLoaded', function(){
 				const inputFile = document.querySelector("input[name='uploadFile']");
 				inputFile.addEventListener("change",fileUploadHandler);
+				cloneUploadDiv = document.querySelector("div.uploadDiv").cloneNode(true);
 			});
 			
 			//파일 업로드 핸들러 함수
@@ -459,32 +460,85 @@
 			function fileUplaod(file){
 				const formData = new FormData();
 				formData.append("uploadFile",file);
-				let progressbar=file.dom[0].querySelector("progress");
+				const thumb=file.dom[0]; //파일 썸네일, progressbar, 'x'버튼 DOM
+				let progressbar=thumb.querySelector("progress");
 				
 				const url = '/files';
 				const xhr = new XMLHttpRequest();
 				xhr.upload.onprogress = function (e){
 					let percent = e.loaded * 100 / e.total;
 					setProgress(progressbar,percent);
+					//100%모두 업로드 되었다면 서버에서 file이 생성되고, DB에 insert되고 하는 시간동안 'x'버튼을 사라지게한다.
+					//만약에 'x'버튼이 사라지지않아서 그 시간안에 사용자가 'x'버튼을 누르면 오류가 날 가능성이 매우 커진다.
+					if(percent==100) thumb.querySelector("img.close").style.display = 'none';
 				}
 				xhr.onload=function(){
 					if (xhr.status === 200 || xhr.status === 201) {
 					    const result = JSON.parse(xhr.responseText); //서버에서 온 응답
 					    console.log(result);
-					    const thumb=file.dom[0].querySelector(".thumb");
+					    //IE11 미만 호환성
+					    thumb.setAttribute("data-fileType",result.fileType);
+					    thumb.setAttribute("data-originalFile",result.originalFile);
+					    thumb.setAttribute("data-uploadPath",result.uploadPath);
+					    thumb.setAttribute("data-uuid",result.uuid);
+					   /*IE11 이상
+					   	thumb.dataset.fileType=result.fileType;
+					    thumb.dataset.originalFile=result.originalFile;
+					    thumb.dataset.uploadPath=result.uploadPath;
+					    thumb.dataset.uuid=result.uuid; 
+					    */
+					    //cloneUploadDiv
+					    const uploadDiv=document.querySelector("div.uploadDiv");
+					    const uploadDivParent=document.querySelector("div.uploadDiv").parentNode;
+					    uploadDivParent.removeChild(uploadDiv);
+					    uploadDivParent.appendChild(cloneUploadDiv);
 					}else {
 						alert("file upload error");
 						console.error(xhr.responseText);
 					}
+					//서버에서 응답이 오면 success든 fail이든 'x'버튼은 보이게해준다.
+					thumb.querySelector("img.close").style.display = 'initial';
 				};
 				xhr.open('post', url, true);
 	            xhr.send(formData);
 	            
-	            //'x'버튼을 눌렀을 때 전송중지하기 위한 이벤트
+	            //'x'버튼을 눌렀을 때 전송중지하기 위한 이벤트 등록
 	            const close=file.dom[0].querySelector("img.close");
-		        close.addEventListener("click",function(){
-					xhr.abort();
-			    });
+		        close.addEventListener("click",function(){attachFileDelHandler(xhr,file.dom[0]);});
+			}
+			
+			//'x' 버튼을 눌렀을 때 전송중지 및 이미 업로드된 파일 삭제(서버에서도 삭제)
+			function attachFileDelHandler(xhr,thumb){
+				xhr.abort(); //요청중단
+				
+				//server에 이미 업로드 되었다면 업로드된 파일 삭제(DB,실제파일,이미지파일이라면 썸네일포함)
+				if(thumb.dataset.uuid != null){
+					const delFile={ //param
+						originalFile:thumb.dataset.originalfile,
+						fileType:thumb.dataset.filetype,
+						uploadPath:thumb.dataset.uploadpath,
+						uuid:thumb.dataset.uuid
+					};
+					
+					fetch("/files", {
+						method: "DELETE",
+						headers: {'Content-Type':'application/json'},
+				        credentials: "same-origin",
+						body: JSON.stringify(delFile)
+					}).then((response) => {
+						if(response.status === 200 || response.status === 201){ //요청성공 시
+							return response.text().then(function(text) {
+								if(text=="success"){ //삭제 성공
+									thumb.parentNode.removeChild(thumb); //삭제되었으므로 thumb도 DOM에서 삭제
+								}else if(text=="fail"){ //삭제 실패
+									alert("파일  삭제 실패");
+								}
+							});
+						}
+					}).catch(error => console.error('error:',error)); //요청에러 시 에러 로그 출력
+				}else{ //server에 올라가기 전에 abort 시켰다면 DOM에서만 삭제시켜준다.
+					thumb.parentNode.removeChild(thumb); //삭제되었으므로 thumb도 DOM에서 삭제
+				}
 			}
 			
 			//파일 미리보기 핸들러
