@@ -3,6 +3,7 @@ package org.bamboo.ilovehub.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
+import org.bamboo.ilovehub.domain.AttachFileVO;
 import org.bamboo.ilovehub.domain.BoardVO;
 import org.bamboo.ilovehub.domain.ContainInitWriteVO;
 import org.bamboo.ilovehub.domain.TagVO;
@@ -18,4 +19,8 @@ public interface BoardMapper {
 	public int regTag(TagVO tagVO);
 	//태그-게시글 매핑 테이블 저장 to Board_Tag_Map
 	public int regBoardTagMap(@Param("tagId")Long tagId, @Param("boardId")Long boardId);
-}
+	//첨부파일 저장
+	public void regFile(AttachFileVO attachFileVO);
+	//첨부파일 삭제
+	public void deleteFile(String uuid);
+}	

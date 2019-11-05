@@ -47,7 +47,7 @@ public class FilesServiceImpl implements FilesService {
 		// IE has file path
 		// (IE의 경우 getOriginalFilename() 을 하면 파일의 이름이 나오지않고 전체 경로가 출력되므로 경로를 잘라낸다)
 		uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("\\") + 1);
-		log.info("only file name:" + uploadFileName);
+		log.debug("only file name:" + uploadFileName);
 
 		// 파일명 중복을 최소화 하기 위한 UUID로 파일명 바꿔주기.
 		UUID uuid = UUID.randomUUID();
@@ -68,6 +68,7 @@ public class FilesServiceImpl implements FilesService {
 			attachFileVO.setUploadPath(splitFoler);
 			attachFileVO.setOriginalFile(uploadFile.getOriginalFilename());
 			attachFileVO.setFileType(contentType);
+			attachFileVO.setFileSize(uploadFile.getSize());
 			result = new ResponseEntity<>(attachFileVO, HttpStatus.OK);
 		} catch (Exception e) {
 			log.error(this.getClass().getSimpleName() + " " + new Object() {

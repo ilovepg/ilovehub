@@ -101,4 +101,29 @@
   	<insert id="regBoardTagMap" parameterType="Long">
   		insert into board_tag_map (tag_id,board_id,reg_date) values (#{tagId},#{boardId},CURRENT_TIMESTAMP())
   	</insert>
+  	
+  	<!-- 첨부파일 저장 -->
+  	<insert id="regFile" parameterType="org.bamboo.ilovehub.domain.AttachFileVO">
+  		INSERT INTO board_file (
+		    uuid,
+		    board_id,
+		    upload_path,
+		    original_file,
+		    file_size,
+		    file_type,
+		    upload_date
+		)VALUES(
+		   #{uuid},
+		   #{boardId},
+		   #{uploadPath},
+		   #{originalFile},
+		   #{fileSize},
+		   #{fileType},
+		   NOW()
+		)
+  	</insert>
+  	<!-- 첨부파일 삭제 -->
+  	<delete id="deleteFile" parameterType="java.lang.String">
+  		DELETE FROM board_file WHERE uuid=#{uuid}
+  	</delete>
   </mapper>
