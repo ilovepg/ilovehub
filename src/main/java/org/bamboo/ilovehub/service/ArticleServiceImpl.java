@@ -1,9 +1,11 @@
 package org.bamboo.ilovehub.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bamboo.ilovehub.domain.AttachFileVO;
 import org.bamboo.ilovehub.domain.BoardVO;
 import org.bamboo.ilovehub.domain.ContainInitWriteVO;
 import org.bamboo.ilovehub.domain.TagVO;
@@ -28,12 +30,12 @@ public class ArticleServiceImpl implements ArticleService {
 		
 		//TODO : 회원완료되면 writer에 회원 넣기 지금은 임시
 		vo.setWriter("tester");
-		
 		try {
 			int boardInsertResult=insertBoardBasic(vo);
-			if(boardInsertResult>0) { //board테이블에 insert성공
+			if(boardInsertResult>0){ //board테이블에 insert성공
 				Long boardId=vo.getBoardId();
 				insertBoardTags(vo.getTags(),boardId);
+				insertBoardFile(vo.getAttachFiles(), boardId);
 			}
 		}catch(Exception e){
 			log.error(this.getClass().getSimpleName()+" "+new Object(){}.getClass().getEnclosingMethod().getName()+" error:"+e.getMessage());
@@ -48,7 +50,7 @@ public class ArticleServiceImpl implements ArticleService {
 		return boardInsertResult;
 	}
 	//Board_Tag 테이블에 태그정보 저장, 이미 있는 태그일 경우 tagging_cnt컬럼 +1
-	public void insertBoardTags(List<TagVO> tags, Long boardId) {
+	private void insertBoardTags(List<TagVO> tags, Long boardId) {
 		//TODO : private로 바꿔보기
 		for(TagVO item:tags) {
 			int tagInsertResult=boardMapper.regTag(item);
@@ -60,9 +62,16 @@ public class ArticleServiceImpl implements ArticleService {
 		}
 	}
 	//Board_Tag_Map 테이블에 board_id와 tag_id 맵핑
-	public void insertBoardTagMapping(Long boardId, Long tagId) {
+	private void insertBoardTagMapping(Long boardId, Long tagId) {
 		//TODO : private로 바꿔보기
 		boardMapper.regBoardTagMap(tagId,boardId);
+	}
+	//File정보 DB삽입
+	private void insertBoardFile(ArrayList<AttachFileVO> attachFiles, Long boardId){
+		attachFiles.forEach(attachFile->{
+			attachFile.setBoardId(boardId);
+			boardMapper.regFile(attachFile);
+		});
 	}
 	
 	//최초로 쓰기[write]에 접속하였을때 초기정보[머리말, 게시판분류코드] 가져오기

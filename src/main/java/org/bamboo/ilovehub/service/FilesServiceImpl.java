@@ -56,14 +56,12 @@ public class FilesServiceImpl implements FilesService {
 		File saveFile = new File(uploadPath, uploadFileName);
 		try {
 			uploadFile.transferTo(saveFile); // 실제 업로드 실행
-
 			String contentType = checkFileType(saveFile);
 			if (contentType.startsWith("image")) { // 이미지 파일인지 판별한 후 이미지라면 썸네일 생성
 				FileOutputStream thumbnail = new FileOutputStream(new File(uploadPath, "s_" + uploadFileName));
 				Thumbnailator.createThumbnail(uploadFile.getInputStream(), thumbnail, 200, 165);
 				thumbnail.close();
 			}
-
 			attachFileVO.setUuid(uuid.toString());
 			attachFileVO.setUploadPath(splitFoler);
 			attachFileVO.setOriginalFile(uploadFile.getOriginalFilename());

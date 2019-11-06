@@ -23,7 +23,7 @@ function handleSubmit(){
 	let permitReply = document.querySelector("input[name=permit_reply]").checked; //댓글허용
 	isPublic=isPublic == true ? 'Y':'N';
 	permitReply=permitReply == true ? 'Y':'N';
-	
+	const attachFiles=getAttahFile();
 	//태그
 	let tagValue = marginTag(); //Tag값 array로 변환		
 	const writeData = {
@@ -33,7 +33,8 @@ function handleSubmit(){
 		"contents":contents,
 		"tags":tagValue,
 		"isPublic":isPublic,
-		"permitReply":permitReply
+		"permitReply":permitReply,
+		"attachFiles":attachFiles
 	};
 	
 	fetch("/articles/"+pageFlag, {
@@ -58,7 +59,22 @@ function handleSubmit(){
 		}
 	})
 	.catch(error => console.error('error:',error)); //요청에러 시 에러 로그 출력
-	
+}
+
+function getAttahFile(){
+	let attachFiles=[];
+	const thumbs=document.querySelectorAll("div#thumbnails div.thumb");
+	thumbs.forEach(function(item,index){
+		const file={
+			"uploadPath":item.dataset.uploadpath,
+			"uuid":item.dataset.uuid,
+			"originalFile":item.dataset.originalfile,
+			"fileType":item.dataset.filetype,
+			"fileSize":item.dataset.filesize
+		};
+		attachFiles.push(file);
+	});
+	return attachFiles;
 }
 
 /* ↓태그 관련↓  */

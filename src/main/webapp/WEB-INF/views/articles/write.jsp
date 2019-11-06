@@ -422,7 +422,6 @@
 			<!-- noti,free,tech 등등과 같은 게시판 종류에 따른 게시판코드 -->
 			const classificationCode = '<c:out value="${bcvo.classificationCode}" />';
 		</script>
-		<script src="/resources/js/custom/write_common.js"></script>
 		
 		<!-- File Upload 관련 -->
 		<script>
@@ -481,17 +480,18 @@
 					    thumb.setAttribute("data-originalFile",result.originalFile);
 					    thumb.setAttribute("data-uploadPath",result.uploadPath);
 					    thumb.setAttribute("data-uuid",result.uuid);
+					    thumb.setAttribute("data-fileSize",result.fileSize);
 					   /*IE11 이상
 					   	thumb.dataset.fileType=result.fileType;
 					    thumb.dataset.originalFile=result.originalFile;
 					    thumb.dataset.uploadPath=result.uploadPath;
 					    thumb.dataset.uuid=result.uuid; 
 					    */
-					    //cloneUploadDiv
-					    const uploadDiv=document.querySelector("div.uploadDiv");
+					    //cloneUploadDiv- <input type='file'> 초기화를 위한 코드지만 지금은 보류
+					    /*const uploadDiv=document.querySelector("div.uploadDiv");
 					    const uploadDivParent=document.querySelector("div.uploadDiv").parentNode;
 					    uploadDivParent.removeChild(uploadDiv);
-					    uploadDivParent.appendChild(cloneUploadDiv);
+					    uploadDivParent.appendChild(cloneUploadDiv);*/
 					}else {
 						alert("file upload error");
 						console.error(xhr.responseText);
@@ -636,7 +636,7 @@
 		  		}
 		  		return true;
 			}
-			
 		</script>
+		<script src="/resources/js/custom/write_common.js"></script>
 </body>
 </html>
