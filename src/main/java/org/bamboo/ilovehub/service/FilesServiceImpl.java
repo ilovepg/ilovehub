@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
+import org.apache.tika.Tika;
 import org.bamboo.ilovehub.domain.AttachFileVO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -109,9 +110,8 @@ public class FilesServiceImpl implements FilesService {
 	// 파일타입 체크 후 반환
 	private String checkFileType(File file) {
 		try {
-			// 실제 파일의 내용이 아니라 파일의 확장자를 이용하여 마임타입(MIME)을 판단합니다.
-			// 그러므로 확장자가 없는 파일은 null을 반환합니다. -> 실제 파일이 존재하지 않아도 확장자로 마입타입(MIME)을 반환합니다.
-			return Files.probeContentType(file.toPath());
+			String mimeType = new Tika().detect(file);
+			return mimeType;
 		} catch (IOException e) {
 			log.error(this.getClass().getSimpleName() + " " + new Object() {
 			}.getClass().getEnclosingMethod().getName() + " error:" + e.getMessage());
@@ -132,4 +132,21 @@ public class FilesServiceImpl implements FilesService {
 		}
 		return false;
 	}
+	
+	
+	
+	
+	// 파일타입 체크 후 반환-Files.probeContentType이 application/stream-octat 이러한 파일들(sql,jsp,php등)은 확장자 반환을 null로 하여
+	// 문제가 발생하여 위의 tika 라이브러리를 사용하였음.
+	/*private String checkFileType(File file) {
+		try {
+			// 실제 파일의 내용이 아니라 파일의 확장자를 이용하여 마임타입(MIME)을 판단합니다.
+			// 그러므로 확장자가 없는 파일은 null을 반환합니다. -> 실제 파일이 존재하지 않아도 확장자로 마입타입(MIME)을 반환합니다.
+			return Files.probeContentType(file.toPath());
+		} catch (IOException e) {
+			log.error(this.getClass().getSimpleName() + " " + new Object() {
+			}.getClass().getEnclosingMethod().getName() + " error:" + e.getMessage());
+		}
+		return "false";
+	}*/
 }

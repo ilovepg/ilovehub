@@ -376,7 +376,7 @@
 																<h3>첨부파일</h3>
 															</div> -->
 															<!-- /.panel-heading -->
-															<div class="panel-body">
+															<div class="panel-body upload-panel">
 																<div class="uploadDiv">
 																	<label class="btn btn-primary btn-file">
 																		업로드<input name="uploadFile" type="file" multiple/>
@@ -432,14 +432,21 @@
 		  	let idx=0; //파일의 일련번호라고 생각하면됨.
 		  	let cloneUploadDiv; //<input type='file'> 초기화를 위한 초기 아무것도 없는 복제DOM
 			window.addEventListener('DOMContentLoaded', function(){
-				const inputFile = document.querySelector("input[name='uploadFile']");
-				inputFile.addEventListener("change",fileUploadHandler);
+				/* const inputFile = document.querySelector("input[name='uploadFile']");
+				inputFile.addEventListener("change",fileUploadHandler); */
+				const uploadDiv=document.querySelector("div.upload-panel");
+				uploadDiv.addEventListener("change",function(e){
+					const target = e.target;
+					if(target.name=="uploadFile"){
+						fileUploadHandler(target);
+					}
+				})
 				cloneUploadDiv = document.querySelector("div.uploadDiv").cloneNode(true);
 			});
 			
 			//파일 업로드 핸들러 함수
-			function fileUploadHandler(){
-				const files = this.files;
+			function fileUploadHandler(target){
+				const files = target.files;
 				sumFilesSize=0; //파일 업로드함수가 호출될 때 마다 이 값은 초기화 되어야한다.
 				
 				for(let i=0; i<files.length; i++){
@@ -487,11 +494,11 @@
 					    thumb.dataset.uploadPath=result.uploadPath;
 					    thumb.dataset.uuid=result.uuid; 
 					    */
-					    //cloneUploadDiv- <input type='file'> 초기화를 위한 코드지만 지금은 보류
-					    /*const uploadDiv=document.querySelector("div.uploadDiv");
+					    //cloneUploadDiv- <input type='file'> 초기화를 위한 코드
+					    const uploadDiv=document.querySelector("div.uploadDiv");
 					    const uploadDivParent=document.querySelector("div.uploadDiv").parentNode;
 					    uploadDivParent.removeChild(uploadDiv);
-					    uploadDivParent.appendChild(cloneUploadDiv);*/
+					    uploadDivParent.appendChild(cloneUploadDiv);
 					}else {
 						alert("file upload error");
 						console.error(xhr.responseText);
