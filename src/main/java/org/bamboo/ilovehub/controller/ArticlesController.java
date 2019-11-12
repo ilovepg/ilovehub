@@ -1,6 +1,5 @@
 package org.bamboo.ilovehub.controller;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.bamboo.ilovehub.domain.BoardVO;
@@ -34,11 +33,8 @@ public class ArticlesController {
 	headers = "Accept=application/json;charset=utf-8;")
 	@ResponseBody
 	public Map<String,Object> boardWrite(@PathVariable String board,@RequestBody BoardVO vo) {
-		Map<String,Object> result = new HashMap<String,Object>();
 		log.info("board:"+board+", vo:"+vo.toString());
-		articleService.boardWrite(vo);
-		result.put("result", "success");
-		return result;
+		return articleService.boardWrite(vo);
 	}
 	
 	//게시글 리스트화면 [공지,기술,자유]

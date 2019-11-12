@@ -27,9 +27,15 @@ public class ArticleServiceImpl implements ArticleService {
 	@Transactional
 	public Map<String,Object> boardWrite(BoardVO vo){
 		Map<String,Object> result = new HashMap<String,Object>();
-		
+		result.put("result", "fail");
 		//TODO : 회원완료되면 writer에 회원 넣기 지금은 임시
 		vo.setWriter("tester");
+		
+		//필수예외처리
+		boolean exceptionResult=essentialException(vo.getPreface().getCode(), vo.getClassificationCode(), 
+				vo.getTitle(), vo.getContents(),result);
+		if(!exceptionResult) return result;
+		
 		try {
 			int boardInsertResult=insertBoardBasic(vo);
 			if(boardInsertResult>0){ //board테이블에 insert성공
@@ -37,7 +43,10 @@ public class ArticleServiceImpl implements ArticleService {
 				insertBoardTags(vo.getTags(),boardId);
 				insertBoardFile(vo.getAttachFiles(), boardId);
 			}
+			result.put("result", "success");
 		}catch(Exception e){
+			result.put("message", e.getMessage());
+			result.put("errorCode", "500");
 			log.error(this.getClass().getSimpleName()+" "+new Object(){}.getClass().getEnclosingMethod().getName()+" error:"+e.getMessage());
 			throw new RuntimeException(e);
 		}
@@ -94,9 +103,51 @@ public class ArticleServiceImpl implements ArticleService {
 	//게시글 리스트 가져오기 [공지,기술,자유]
 	@Override
 	public List<BoardVO> getBoards(String board) {
-		log.info("getBoardList Without Paging");
+		log.info("getBoardList Without Paging:"+board);
 		List<BoardVO>boards=boardMapper.getBoards(board);
 		log.info(boards.toString());
 		return boards;
+	}
+	
+	//필수예외처리[DB에서 not null]
+	//TODO : 추후 회원가입과 로그인이 구현되면 writer도 예외처리해줘야하고, 세션을 검사하여 현재 세션이 연결된 회원만 글을 쓸 수 있도록 해야한다.(notepad++참고) 
+	private boolean essentialException(int preface, int classificationCode, 
+			String title, String contents,Map<String,Object> result) {
+		if(preface==0) {
+			log.error("==================================================================");
+			log.error("boardWrite critical error!!! preface is zero(0)");
+			log.error("==================================================================");
+			result.put("message", "preface is zero(0)");
+			result.put("errorCode", "100");
+			return false;
+		}
+		
+		if(classificationCode==0) {
+			log.error("===================================================================");
+			log.error("boardWrite critical error!!! classificationCode is zero(0)");
+			log.error("===================================================================");
+			result.put("message", "classificationCode is zero(0)");
+			result.put("errorCode", "200");
+			return false;
+		}
+		
+		if(title.equals("") || title==null) {
+			log.error("========================================================");
+			log.error("boardWrite critical error!!! title is empty");
+			log.error("========================================================");
+			result.put("message", "title is empty");
+			result.put("errorCode", "300");
+			return false;
+		}
+		
+		if(contents.equals("") || contents==null) {
+			log.error("========================================================");
+			log.error("boardWrite critical error!!! contents is empty");
+			log.error("========================================================");
+			result.put("message", "contents is empty");
+			result.put("errorCode", "400");
+			return false;
+		}
+		return true;
 	}
 }

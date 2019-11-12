@@ -68,9 +68,10 @@
 		left join article_preface_code apc on
 		    b.preface_code = apc.code
 		where
-			bcc.classification_text = 'tech' and b.is_del='N'
+			bcc.classification_text = #{board} and b.is_del='N'
 		order by
 			board_id desc
+		limit 0,10
   	</select>
   	<insert id="regArticle" useGeneratedKeys="true" keyProperty="boardVO.boardId" 
   			 parameterType="org.bamboo.ilovehub.domain.BoardVO">

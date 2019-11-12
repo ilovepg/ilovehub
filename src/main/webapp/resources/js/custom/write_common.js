@@ -17,6 +17,11 @@ function handleSubmit(){
 	const preface = document.querySelector("select[name=preface]").value; //분류[머리말]
 	const title = document.querySelector("input[name=title]").value; //제목
 	const contents=CKEDITOR.instances.editor.getData(); //내용
+	
+	//필수 예외처리
+	const exceptionResult=essentialException(preface,classificationCode,title,contents);
+	if(!exceptionResult) return ;
+	
 	//추후에 필요할 내용입력하는것
 	//CKEDITOR.instances.editor.setData(''); //태그포함입력
 	let isPublic = document.querySelector("input[name=is_public]").checked; //공개
@@ -61,6 +66,37 @@ function handleSubmit(){
 	.catch(error => console.error('error:',error)); //요청에러 시 에러 로그 출력
 }
 
+//필수 예외처리 - DB에 not null인것들 null로 넘어갈 수 없게 처리
+function essentialException(preface,classificationCode,title,contents){
+	//분류를 선택하지 않았을 때
+	if(preface=="" || preface==null || preface==undefined){
+		alert("분류를 선택해주세요.");
+		document.querySelector("select[name=preface]").focus();
+		return false;
+	}
+	//게시글 분류코드가 없을때 [서버에러일 확률이 매우 높음]
+	if(classificationCode=="" || classificationCode==null || classificationCode==undefined){
+		alert("게시글 분류가 올바르지 않습니다. 서버 에러입니다. 관리자에게 문의 또는 새로고침을 해주세요.");
+		return false;
+	}
+	//제목이 입력되지 않았을 때
+	if(title=="" || title==null || title==undefined){
+		alert("제목을 입력해주세요.");
+		document.querySelector("input[name=title]").focus();
+		return false;
+	}
+	//게시글 내용이 입력되지 않았을때[띄어쓰기만 되었을 때, 개행만 되었을 때 는 잡아내지 못하는 문제]
+	if(contents=="" || contents==null || contents==undefined){
+		alert("내용을 입력해주세요.");
+		CKEDITOR.instances.editor.focus();
+		return false;
+	}
+	//글쓴이가 없을때 [세션이 살아있는 동안에만 글을 쓸 수 있도록]
+	
+	return true;
+}
+
+//thumbnail에 있는 파일 정보를 가져와서 서버로 업로드한다.
 function getAttahFile(){
 	let attachFiles=[];
 	const thumbs=document.querySelectorAll("div#thumbnails div.thumb");
