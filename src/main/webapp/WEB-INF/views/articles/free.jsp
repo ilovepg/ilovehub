@@ -375,8 +375,8 @@
 															<option value="TWC">제목 OR 내용 OR 작성자</option>							
 														</select>						
 														<input type="text" class="form-control" name="keyword" style="min-width:350px; max-width:500px;">
-														<input type="hidden" name="pageNum" value='${pageMaker.cri.pageNum}'>
-														<input type="hidden" name="amount" value='${pageMaker.cri.amount}'>
+														<input type="hidden" name="pageNum" value='${pageMaker.cri.page}'>
+														<input type="hidden" name="amount" value='${pageMaker.cri.perPageBoardNum}'>
 														
 														<button class='btn btn-primary'>검색</button>
 													</div>
@@ -384,11 +384,17 @@
                                             	<a style="color:white;" href="${board}/new-form" class="btn btn-success pull-right">쓰기</a>
                                             </div>
                                             <ul class="pagination justify-content-center custom-pagination" style="margin-top: 20px;">
-                                                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                                                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                                            	<c:if test="${pageMaker.prev}">
+													<li class="page-item"><a class="page-link" href="1">&lt;&lt;</a></li>
+													<li class="page-item"><a class="page-link" href="${pageMaker.startPage-1}">&lt;</a></li>
+												</c:if>
+												<c:forEach var="num" begin="${pageMaker.startPage}" end="${pageMaker.endPage}">
+													<li class="page-item  ${pageMaker.cri.page == num ? "active":""} "><a  class="page-link" href="${num}">${num}</a></li>
+												</c:forEach>
+												<c:if test="${pageMaker.next}">
+													<li class="page-item"><a class="page-link" href="${pageMaker.endPage+1}">&gt;</a></li>
+													<li class="page-item"><a class="page-link" href="${pageMaker.realEndPage}">&gt;&gt;</a></li>
+												</c:if>
                                             </ul>
                                         </div>
                                     </div>

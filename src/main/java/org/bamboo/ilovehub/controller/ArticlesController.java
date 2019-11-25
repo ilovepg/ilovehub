@@ -4,6 +4,8 @@ import java.util.Map;
 
 import org.bamboo.ilovehub.domain.BoardVO;
 import org.bamboo.ilovehub.domain.ContainInitWriteVO;
+import org.bamboo.ilovehub.domain.Criteria;
+import org.bamboo.ilovehub.domain.PageCreator;
 import org.bamboo.ilovehub.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -39,9 +41,13 @@ public class ArticlesController {
 	
 	//게시글 리스트화면 [공지,기술,자유]
 	@GetMapping("/{board}")
-	public void showBoard(@PathVariable("board")String board, Model model) {
+	public void showBoard(@PathVariable("board")String board, Model model, Criteria cri) {
+		cri.setClassificationText(board); //게시글 분류정보[tech,noti 등등] 세팅 
 		model.addAttribute("board",board);
-		model.addAttribute("list",articleService.getBoards(board));
+		model.addAttribute("list",articleService.getBoards(cri));
+		int total = articleService.getTotal(board);
+		model.addAttribute("pageMaker",new PageCreator(cri,total,10));
+		log.info(model.asMap().get("pageMaker"));//log
 	}
 	
 	//게시글 쓰기화면 [공지,기술,자유]

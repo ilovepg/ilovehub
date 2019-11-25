@@ -58,7 +58,7 @@
 		order by
 			apc.order asc
   	</select>
-  	<select id="getBoards" parameterType="String" resultMap="getBoardsMap">
+  	<select id="getBoards" parameterType="org.bamboo.ilovehub.domain.Criteria" resultMap="getBoardsMap">
   		select
 			b.*, apc.code, apc.code_explain
 		from
@@ -68,10 +68,13 @@
 		left join article_preface_code apc on
 		    b.preface_code = apc.code
 		where
-			bcc.classification_text = #{board} and b.is_del='N'
+			bcc.classification_text = #{classificationText} and b.is_del='N'
 		order by
 			board_id desc
-		limit 0,10
+		limit #{pageStart}, #{perPageBoardNum}
+  	</select>
+  	<select id="getTotal" parameterType="java.lang.String" resultType="int">
+  		SELECT COUNT(*) FROM board a INNER JOIN board_classification_code b ON a.classification_code = b.classification_code AND b.classification_text=#{classificationText}
   	</select>
   	<insert id="regArticle" useGeneratedKeys="true" keyProperty="boardVO.boardId" 
   			 parameterType="org.bamboo.ilovehub.domain.BoardVO">

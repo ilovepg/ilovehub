@@ -8,6 +8,7 @@ import java.util.Map;
 import org.bamboo.ilovehub.domain.AttachFileVO;
 import org.bamboo.ilovehub.domain.BoardVO;
 import org.bamboo.ilovehub.domain.ContainInitWriteVO;
+import org.bamboo.ilovehub.domain.Criteria;
 import org.bamboo.ilovehub.domain.TagVO;
 import org.bamboo.ilovehub.mapper.BoardMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,11 +103,15 @@ public class ArticleServiceImpl implements ArticleService {
 	
 	//게시글 리스트 가져오기 [공지,기술,자유]
 	@Override
-	public List<BoardVO> getBoards(String board) {
-		log.info("getBoardList Without Paging:"+board);
-		List<BoardVO>boards=boardMapper.getBoards(board);
+	public List<BoardVO> getBoards(Criteria cri) {
+		log.info("getBoardList Without Paging:"+cri.getClassificationText());
+		List<BoardVO>boards=boardMapper.getBoards(cri);
 		log.info(boards.toString());
 		return boards;
+	}
+	//게시글 총 개수 가져오기[페이징을 위함]
+	public int getTotal(String classificationText) {
+		return boardMapper.getTotal(classificationText);
 	}
 	
 	//필수예외처리[DB에서 not null]

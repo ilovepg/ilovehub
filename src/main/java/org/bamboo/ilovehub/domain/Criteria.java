@@ -14,19 +14,28 @@ import lombok.Data;
 @Data
 public class Criteria {
 	private int page; //페이지 번호
-	private int perPageNum;//페이지 당 게시글 수
+	private int perPageBoardNum;//페이지 당 게시글 수
+	private String classificationText;//[공지,기술,자유]
+	
+	
+	public Criteria(int page, int perPageNum) {
+		if(page<1) page=1;
+		if(perPageNum>30) perPageNum=30; //페이지 당 게시글 수가 무한정으로 커지는 것을 막기위해 30으로 제한을 해둠.
+		this.page = page;
+		this.perPageBoardNum = perPageNum;
+	}
 	
 	public Criteria() {
 		this.page=1;
-		this.perPageNum=10;
-		//this(1,10);
+		this.perPageBoardNum=10;
 	}
 	
-	public Criteria(int page, int perPageNum) {
-		this.page = page;
-		this.perPageNum = perPageNum;
+	/* method for Mybatis SQL Mapper -> #{pageStart}로 쓰면 내부적으로 getPageStart를 호출하기 떄문
+	 * 산술식 : 시작 데이터 번호 = (페이지 번호-1) * 페이지 당 보여지는 개수
+	 * 의   미 : 현재 페이지에서 몇번 게시글부터 몇번 게시글까지 가지고 올지 정하는 메소드.
+	 */
+	public int getPageStart() {
+		return (page-1)*perPageBoardNum;
 	}
-	
-	
 	
 }

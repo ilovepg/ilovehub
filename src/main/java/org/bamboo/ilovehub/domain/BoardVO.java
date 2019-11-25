@@ -19,5 +19,5 @@ public class BoardVO {
 	private char permitReply;//댓글허용 여부
 	private ArrayList<TagVO> tags; //tag
 	private BoardPrefaceVO preface;//머리말
-	private ArrayList<AttachFileVO> attachFiles;
+	private ArrayList<AttachFileVO> attachFiles; //첨부파일
 }
