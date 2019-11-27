@@ -115,12 +115,8 @@ public class ArticleServiceImpl implements ArticleService {
 	}
 	
 	//게시글 상세페이지
-	public BoardVO boardDetail(String boardType,Long boardId) {
-		HashMap<String,Object> paramMap = new HashMap<String,Object>();
-		paramMap.put("boardType", boardType);
-		paramMap.put("boardId", boardId);
-		BoardVO vo=boardMapper.getBoardDetail(paramMap);
-		log.info("boardDetail:"+vo);
+	public BoardVO boardDetail(Long boardId) {
+				
 		return null;
 	}
 	

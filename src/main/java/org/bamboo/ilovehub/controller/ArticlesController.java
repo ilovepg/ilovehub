@@ -70,10 +70,10 @@ public class ArticlesController {
 	
 	//게시글 상세페이지(Detail)
 	@GetMapping("/{board}/{id}")
-	public ModelAndView boardDetail(@PathVariable("board")String boardType, @PathVariable("id")Long boardId) {
+	public ModelAndView boardDetail(@PathVariable("board")String board, @PathVariable("id")Long boardId) {
 		ModelAndView mv = new ModelAndView("/articles/detail");
-		log.info("detail페이지 정보:"+boardType+", "+boardId);
-		articleService.boardDetail(boardType,boardId);
+		log.info("detail페이지 정보:"+board+", "+boardId);
+		articleService.boardDetail(boardId);
 		return mv;
 	}
 	
