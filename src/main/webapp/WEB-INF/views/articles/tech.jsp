@@ -29,7 +29,9 @@
 		    margin-top: 25px;
 		    line-height: 1.5;
 		}
-		
+		.main-tbl tr.content{
+			cursor:pointer;
+		}
 		.main-tbl th{
 		    padding: 9px 12px;
 		    border-top: 1px solid #CCC;
@@ -265,8 +267,7 @@
                                     <div class="col-md-12" style="padding: 0 15px 0 45px;">
                                         <div class="main-content-inner">
                                             <p>기술정리 게시판</p>
-                                        
-                                            <table class="main-tbl">
+                                            <table class="main-tbl table-hover">
                                                 <thead>
                                                     <tr>
                                                         <th></th>  <!-- 분류 -->
@@ -277,14 +278,14 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr class="top">
+                                                    <tr class="top content">
                                                         <td>공지</td>
                                                         <td class="title">사이트가 복구되었습니다.</td>
                                                         <td>마스터</td>
                                                         <td>7시간 전</td>
                                                         <td>1089</td>
                                                     </tr>
-                                                    <tr class="top">
+                                                    <tr class="top content">
                                                         <td>공지</td>
                                                         <td class="title">포인트 제도가 생겼습니다!</td>
                                                         <td>마스터</td>
@@ -292,7 +293,7 @@
                                                         <td>1054</td>
                                                     </tr>
                                                     <c:forEach var="board" items="${list}">
-                                                     <tr>
+                                                     <tr class="content" data-id="${board.boardId}">
                                                 		<td><c:out value="${board.preface.codeExplain}"/></td>
                                                         <td class="title"><c:out value="${board.title}"/></td>
                                                         <td><c:out value="${board.writer}"/></td>
@@ -300,62 +301,6 @@
                                                         <td><c:out value="${board.views}"/></td>
                                                      </tr>
                                                 	</c:forEach>
-                                                    <tr>
-                                                        <td>기타</td>
-                                                        <td class="title">직장이 멀때</td>
-                                                        <td>엑스</td>
-                                                        <td>2019.12.31</td>
-                                                        <td>454</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Spring</td>
-                                                        <td class="title">ajax로 여러 데이터를 넘기고..</td>
-                                                        <td>챔프</td>
-                                                        <td>2019.12.31</td>
-                                                        <td>1454</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>NodeJS</td>
-                                                        <td class="title">DB연동</td>
-                                                        <td>노력</td>
-                                                        <td>2019.12.31</td>
-                                                        <td>554</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>뉴스/신제품</td>
-                                                        <td class="title">와.. MSI 노트북 신제품 엄청 좋네요.</td>
-                                                        <td>노트북매니아</td>
-                                                        <td>2019.12.31</td>
-                                                        <td>254</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>기타</td>
-                                                        <td class="title">직장이 멀때</td>
-                                                        <td>엑스</td>
-                                                        <td>2019.12.31</td>
-                                                        <td>454</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Spring</td>
-                                                        <td class="title">ajax로 여러 데이터를 넘기고..</td>
-                                                        <td>챔프</td>
-                                                        <td>2019.12.31</td>
-                                                        <td>1454</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>NodeJS</td>
-                                                        <td class="title">DB연동</td>
-                                                        <td>노력</td>
-                                                        <td>2019.12.31</td>
-                                                        <td>554</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>뉴스/신제품</td>
-                                                        <td class="title">와.. MSI 노트북 신제품 엄청 좋네요.</td>
-                                                        <td>노트북매니아</td>
-                                                        <td>2019.12.31</td>
-                                                        <td>254</td>
-                                                    </tr>
                                                 </tbody>
                                             </table>
                                             <!-- 검색 -->
@@ -443,6 +388,32 @@
 				actionForm.querySelector("input[name='page']").value=page;
 				actionForm.setAttribute("action","/articles/"+pageFlag);
 				actionForm.submit();
+			}
+		});
+	</script>
+	<!-- 컨텐츠 이동관련 -->
+	<script>
+		window.addEventListener('DOMContentLoaded', function(){
+			Array.prototype.forEach.call(document.querySelectorAll(".main-tbl tr.content"), function(trs) {
+			    trs.addEventListener('click', function() {
+			    	moveDetail(this);
+			    },false);
+			});
+			
+			function moveDetail(e){
+				event.preventDefault();
+				const id=e.dataset.id;
+				
+				fetch("/files/"+id, {
+					method: "GET",
+			        credentials: "same-origin",
+				}).then((response) => {
+					if(response.status === 200 || response.status === 201){ //요청성공 시
+					}
+				}).catch(error => console.error('error:',error)); //요청에러 시 에러 로그 출력
+// 				actionForm.querySelector("input[name='page']").value=page;
+// 				actionForm.setAttribute("action","/articles/"+pageFlag);
+// 				actionForm.submit();
 			}
 		});
 	</script>

@@ -17,4 +17,6 @@ public interface ArticleService {
 	public Map<String,Object> boardWrite(BoardVO vo);
 	//최초로 쓰기[write]에 접속하였을때 초기정보[머리말, 게시판분류코드] 가져오기
 	public ContainInitWriteVO getWriteInit(String classificationText);
+	//게시글 상세페이지
+	public BoardVO boardDetail(Long id);
 }

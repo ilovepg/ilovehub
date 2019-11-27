@@ -114,7 +114,13 @@ public class ArticleServiceImpl implements ArticleService {
 		return boardMapper.getTotal(classificationText);
 	}
 	
-	//필수예외처리[DB에서 not null]
+	//게시글 상세페이지
+	public BoardVO boardDetail(Long boardId) {
+				
+		return null;
+	}
+	
+	//필수예외처리[DB에서 not null인것들 예외처리 완료]
 	//TODO : 추후 회원가입과 로그인이 구현되면 writer도 예외처리해줘야하고, 세션을 검사하여 현재 세션이 연결된 회원만 글을 쓸 수 있도록 해야한다.(notepad++참고) 
 	private boolean essentialException(int preface, int classificationCode, 
 			String title, String contents,Map<String,Object> result) {
