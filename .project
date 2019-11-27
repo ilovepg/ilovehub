@@ -53,12 +53,12 @@
 		<link>
 			<name>src/main/webapp/WEB-INF/views/main.jsp</name>
 			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Desktop/test/src/main/webapp/WEB-INF/views/main.jsp</locationURI>
+			<location>C:/Users/ILovePC/git/ilovehub/src/main/webapp/WEB-INF/views/main.jsp</location>
 		</link>
 		<link>
 			<name>src/main/webapp/WEB-INF/views/articles/free.jsp</name>
 			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Desktop/test/src/main/webapp/WEB-INF/views/board/freeBoard.jsp</locationURI>
+			<location>C:/Users/ILovePC/git/ilovehub/src/main/webapp/WEB-INF/views/articles/free.jsp</location>
 		</link>
 	</linkedResources>
 </projectDescription>

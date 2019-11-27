@@ -1,5 +1,6 @@
 package org.bamboo.ilovehub.mapper;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -18,6 +19,8 @@ public interface BoardMapper {
 	public ContainInitWriteVO getWriteInit(String classificationText);
 	//게시글 정보 저장 to Board Tbl
 	public int regArticle(@Param("boardVO")BoardVO boardVO);
+	//게시글 상세정보 가져오기
+	public BoardVO getBoardDetail(HashMap<String,Object> params);
 	//태그 정보 저장 to BoardTag
 	public int regTag(TagVO tagVO);
 	//태그-게시글 매핑 테이블 저장 to Board_Tag_Map
