@@ -306,20 +306,20 @@
 											<div class="card-body">
 												<div class="row" style="margin-bottom:10px;">
 													<div class="col-md-12">
-														<h2>제목</h2>
+														<h2><c:out value="${board.title}"/></h2>
 													</div>
 												</div>
 												<div class="row info" style="margin-bottom: 20px;">
 													<div class="col-md-12">
-														<span>id</span>
-														<span>regDate</span>
-														<span>조회 수 xx</span>
+														<span><c:out value="${board.writer}"/></span>
+														<span><c:out value="${board.regDate}"/></span>
+														<span>조회 수 <c:out value="${board.views}"/></span>
 														<span>댓글 수 xx</span>
 													</div>
 												</div>
 												<div class="row" style="margin-bottom: 20px;">
 													<div class="col-md-12">
-														<div>게시글 내용이 들어감</div>
+														<div><c:out value="${board.contents}" escapeXml="false"/></div>
 													</div>
 												</div>
 
@@ -327,9 +327,9 @@
 												<div class="row">
 													<div class="col-md-12">
 														<ul id="tag-list">
-															<li>#태그</li>
-															<li>#내용이</li>
-															<li>#들어감</li>
+															<c:forEach var="tagItem" items="${tags}">
+																<li><c:out value="${tagItem.tag}"/></li>
+															</c:forEach>
 														</ul>
 													</div>
 												</div>
@@ -381,16 +381,6 @@
 		</div>
 
 		<%@include file="../includes/footer.html"%>
-		<!-- 
-			서버에서 온 값 JSTL로 받아준다.
-			JS를 나누면(import) JSTL에 접근하지 못하므로 <input hidden>에 넣으려다가 이런식으로 넣는다.
-			아래에서 import하는 write_common.js에서 사용하는 변수들
-		 -->
-		<script>
-			<!-- noti,free,tech 등등과 같은 게시판 종류 -->
-			const pageFlag = '<c:out value="${board}" />';
-			<!-- noti,free,tech 등등과 같은 게시판 종류에 따른 게시판코드 -->
-			const classificationCode = '<c:out value="${bcvo.classificationCode}" />';
-		</script>
+		
 </body>
 </html>

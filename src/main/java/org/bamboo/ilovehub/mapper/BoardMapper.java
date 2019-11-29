@@ -1,5 +1,6 @@
 package org.bamboo.ilovehub.mapper;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -14,6 +15,8 @@ public interface BoardMapper {
 	public List<BoardVO>getBoards(Criteria cri);
 	//총 게시글 수 가져오기
 	public int getTotal(String classificationText);
+	//게시글 상세정보 가져오기
+	public BoardVO getBoardDetail(HashMap<String,Object>param);
 	//쓰기화면에 최초 진입[할때마다] 하였을때 해당게시글 분류코드, 머리말[리스트] 가져오기
 	public ContainInitWriteVO getWriteInit(String classificationText);
 	//게시글 정보 저장 to Board Tbl

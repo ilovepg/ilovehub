@@ -115,9 +115,13 @@ public class ArticleServiceImpl implements ArticleService {
 	}
 	
 	//게시글 상세페이지
-	public BoardVO boardDetail(Long boardId) {
-				
-		return null;
+	public BoardVO boardDetail(String boardType,Long boardId) {
+		Map<String,Object> param = new HashMap<String,Object>();
+		param.put("boardType", boardType);
+		param.put("boardId", boardId);
+		BoardVO vo = boardMapper.getBoardDetail((HashMap)param);
+		log.info("vo:"+vo);
+		return vo;
 	}
 	
 	//필수예외처리[DB에서 not null인것들 예외처리 완료]
