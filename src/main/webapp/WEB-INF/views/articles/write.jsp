@@ -416,7 +416,7 @@
 		 -->
 		<script>
 			<!-- noti,free,tech 등등과 같은 게시판 종류 -->
-			const pageFlag = '<c:out value="${board}" />';
+			const pageFlag = '<c:out value="${bcvo.classificationText}" />';
 			<!-- noti,free,tech 등등과 같은 게시판 종류에 따른 게시판코드 -->
 			const classificationCode = '<c:out value="${bcvo.classificationCode}" />';
 		</script>

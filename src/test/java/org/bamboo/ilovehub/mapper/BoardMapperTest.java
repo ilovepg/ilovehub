@@ -45,7 +45,7 @@ public class BoardMapperTest {
 	public void regArticleTest_글쓰기테스트() {
 		BoardVO vo = new BoardVO();
 		vo.setClassificationCode(2);
-		vo.setPreface(new BoardPrefaceVO(2));
+		//vo.setPreface(new BoardPrefaceVO(2));
 		vo.setTitle("Test");
 		vo.setContents("Test입니다!!");
 		vo.setWriter("Tester");

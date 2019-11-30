@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,32 +31,32 @@ public class ArticlesController {
 	private ArticleService articleService;
 	
 	//게시글 쓰기 백엔드 [공지,기술,자유]
-	@RequestMapping(value= "/{board}", method = RequestMethod.POST,
+	@RequestMapping(value= "/{boardType}", method = RequestMethod.POST,
 	consumes = MediaType.APPLICATION_JSON_VALUE,
 	headers = "Accept=application/json;charset=utf-8;")
 	@ResponseBody
-	public Map<String,Object> boardWrite(@PathVariable String board,@RequestBody BoardVO vo) {
-		log.info("board:"+board+", vo:"+vo.toString());
+	public Map<String,Object> boardWrite(@PathVariable String boardType,@RequestBody BoardVO vo) {
+		log.info("boardType:"+boardType+", vo:"+vo.toString());
 		return articleService.boardWrite(vo);
 	}
 	
 	//게시글 리스트화면 [공지,기술,자유]
-	@GetMapping("/{board}")
-	public void showBoard(@PathVariable("board")String board, Model model, Criteria cri) {
-		cri.setClassificationText(board); //게시글 분류정보[tech,noti 등등] 세팅 
-		model.addAttribute("board",board);
+	@GetMapping("/{boardType}")
+	public void showBoard(@PathVariable("boardType")String boardType, Model model, Criteria cri) {
+		cri.setClassificationText(boardType); //게시글 분류정보[tech,noti 등등] 세팅 
+		model.addAttribute("boardType",boardType);
 		model.addAttribute("list",articleService.getBoards(cri));
-		int total = articleService.getTotal(board);
+		int total = articleService.getTotal(boardType);
 		model.addAttribute("pageMaker",new PageCreator(cri,total,10));
 		log.info(model.asMap().get("pageMaker"));//log
 	}
 	
 	//게시글 쓰기화면 [공지,기술,자유]
-	@GetMapping("/{board}/new-form") 
-	public ModelAndView boardWrite(@PathVariable("board")String board) {
+	@GetMapping("/{boardType}/new-form") 
+	public ModelAndView boardWrite(@PathVariable("boardType")String boardType) {
 		ModelAndView mv = new ModelAndView("/articles/write");
-		ContainInitWriteVO vo = articleService.getWriteInit(board);
-		mv.addObject("board",board);
+		ContainInitWriteVO vo = articleService.getWriteInit(boardType);
+		mv.addObject("boardType",boardType);
 		if(vo!=null) {
 			mv.addObject("bcvo",vo.getBcvo());
 			mv.addObject("bpvos",vo.getBpvos());
@@ -64,13 +65,14 @@ public class ArticlesController {
 			mv.addObject("bcvo",null);
 			mv.addObject("bpvos",null);
 		}
-		log.info("/articles/"+board+"/write view");
+		log.info("/articles/"+boardType+"/write view");
 		return mv;
 	}
 	
 	//게시글 상세페이지(Detail)
-	@GetMapping("/{board}/{id}")
-	public ModelAndView boardDetail(@PathVariable("board")String boardType, @PathVariable("id")Long boardId) {
+	@GetMapping("/{boardType}/{id}")
+	public ModelAndView boardDetail(@PathVariable("boardType")String boardType, @PathVariable("id")Long boardId, 
+			@ModelAttribute("cri")Criteria cri) {
 		ModelAndView mv = new ModelAndView("/articles/detail");
 		log.info("detail페이지 정보:"+boardType+", "+boardId);
 		mv.addObject("board", articleService.boardDetail(boardType,boardId));

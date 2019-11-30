@@ -303,7 +303,7 @@
                                                 	</c:forEach>
                                                 </tbody>
                                             </table>
-                                            <!-- 검색 -->
+                                            <!-- 정렬 -->
                                             <div style="margin-top:10px;">
                                             	<span class="pull-left" style="position:relative; margin-top:5px;">
                                             		<a id="orderSelector" class="a-btn-special">정렬</a>
@@ -330,13 +330,12 @@
 															<option value="TWC">제목 OR 내용 OR 작성자</option>							
 														</select>						
 														<input type="text" class="form-control" name="keyword" style="min-width:350px; max-width:500px;">
-														<input type="hidden" name="pageNum" value='${pageMaker.cri.page}'>
-														<input type="hidden" name="amount" value='${pageMaker.cri.perPageBoardNum}'>
-														
+														<input type='hidden' name='page' value='${pageMaker.cri.page}'>
+														<input type='hidden' name='perPageBoardNum' value='${pageMaker.cri.perPageBoardNum}'>
 														<button class='btn btn-primary'>검색</button>
 													</div>
 												</form>
-                                            	<a style="color:white;" href="${board}/new-form" class="btn btn-success pull-right">쓰기</a>
+                                            	<a style="color:white;" href="${boardType}/new-form" class="btn btn-success pull-right">쓰기</a>
                                             </div>
                                             <!-- 페이지네이션 -->
                                             <ul class="pagination justify-content-center custom-pagination" style="margin-top: 20px;">
@@ -371,20 +370,19 @@
         </div>
 	
 	<%@include file="../includes/footer.html" %>
-	
 	<!-- 페이지 이동관련 -->
 	<script>
 		window.addEventListener('DOMContentLoaded', function(){
 			const actionForm=document.querySelector("#actionForm");
 			const pageItems = document.querySelectorAll(".page-item a");
-			const pageFlag = '<c:out value="${board}" />';
+			const pageFlag = '<c:out value="${boardType}" />'; //tech,noti,free 등등 게시판 타입
 			for(let i=0; i<pageItems.length; i++){
 				pageItems[i].addEventListener("click", function(e) {movePage(this); }, false);
 			}
 			
-			function movePage(e){
+			function movePage(target){
 				event.preventDefault();
-				const page=e.getAttribute("href");
+				const page=target.getAttribute("href");
 				actionForm.querySelector("input[name='page']").value=page;
 				actionForm.setAttribute("action","/articles/"+pageFlag);
 				actionForm.submit();
@@ -394,26 +392,19 @@
 	<!-- 컨텐츠 이동관련 -->
 	<script>
 		window.addEventListener('DOMContentLoaded', function(){
+			const actionForm=document.querySelector("#actionForm");
+			const pageFlag = '<c:out value="${boardType}" />';//tech,noti,free 등등 게시판 타입
 			Array.prototype.forEach.call(document.querySelectorAll(".main-tbl tr.content"), function(trs) {
 			    trs.addEventListener('click', function() {
 			    	moveDetail(this);
 			    },false);
 			});
 			
-			function moveDetail(e){
+			function moveDetail(target){
 				event.preventDefault();
-				const id=e.dataset.id;
-				
-				fetch("/files/"+id, {
-					method: "GET",
-			        credentials: "same-origin",
-				}).then((response) => {
-					if(response.status === 200 || response.status === 201){ //요청성공 시
-					}
-				}).catch(error => console.error('error:',error)); //요청에러 시 에러 로그 출력
-// 				actionForm.querySelector("input[name='page']").value=page;
-// 				actionForm.setAttribute("action","/articles/"+pageFlag);
-// 				actionForm.submit();
+				const id=target.dataset.id;
+				actionForm.setAttribute("action","/articles/"+pageFlag+"/"+id);
+				actionForm.submit(); 
 			}
 		});
 	</script>

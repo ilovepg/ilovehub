@@ -74,12 +74,7 @@
 	color: #fff;
 }
 
-.tag-del-btn {
-	font-size: 12px;
-	font-weight: bold;
-	cursor: pointer;
-	margin-left: 8px;
-}
+
 
 /* 파일 업로드 관련 */
 /* 파일 노멀버튼 변경 */
@@ -311,6 +306,7 @@
 												</div>
 												<div class="row info" style="margin-bottom: 20px;">
 													<div class="col-md-12">
+														<span><c:out value="${board.preface.codeExplain}"/></span>
 														<span><c:out value="${board.writer}"/></span>
 														<span><c:out value="${board.regDate}"/></span>
 														<span>조회 수 <c:out value="${board.views}"/></span>
@@ -327,40 +323,20 @@
 												<div class="row">
 													<div class="col-md-12">
 														<ul id="tag-list">
-															<c:forEach var="tagItem" items="${tags}">
-																<li><c:out value="${tagItem.tag}"/></li>
+															<c:forEach var="tagItem" items="${board.tags}">
+																<li>#<c:out value="${tagItem.tag}"/></li>
 															</c:forEach>
 														</ul>
 													</div>
 												</div>
-												<!-- 게시글 설정 -->
-												
 											</div>
 										</div>
 										<!-- end of Card -->
-
 										<!-- 첨부파일 카드 -->
 										<div class="card" style="margin-top: 10px;">
 											<div class="card-header">첨부파일</div>
 											<div class="card-body">
-												<div class="row">
-													<div class="col-md-12">
-														<div class="panel panel-default">
-															<!-- <div class="panel-heading">
-																<h3>첨부파일</h3>
-															</div> -->
-															<!-- /.panel-heading -->
-															<div class="panel-body upload-panel">
-																<div class="uploadDiv">
-																	<label class="btn btn-primary btn-file">
-																		업로드<input name="uploadFile" type="file" multiple/>
-																	</label>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-												<!-- 첨부파일 업로드 결과 -->
+												<!-- 첨부파일  표시영역 -->
 												<div class="row">
 													<div class="col-md-12">
 														<div id="thumbnails">
@@ -370,6 +346,27 @@
 											</div>
 										</div>
 										<!-- end of Card -->
+										<div class="row" style="float:right; margin-top:5px;">
+											<div class="col-md-12 operBtns">
+												<button data-oper="list" class="btn btn-primary">목록</button>
+												<button data-oper="modify" class="btn btn-warning">수정</button>
+												<button data-oper="delete" class="btn btn-danger">삭제</button>
+											</div>
+										</div>
+										<!-- 해당 버튼을 클릭하면 페이지를 이동시켜주는 form (버튼자체에 링크를 처리하기보다 다양한 상황을 처리하기 편하므로 form을 이용)[목록,수정,삭제] -->
+										<div class="form-group row">
+											<form id="operForm">
+												<input type="hidden" name="boardId" value="<c:out value='${board.boardId}'/>">
+												<input type='hidden' name='page' value='${cri.page}'>
+												<input type='hidden' name='perPageBoardNum' value='${cri.perPageBoardNum}'><%-- 												<input type="hidden" name="type" value="<c:out value='${cri.type}'/>"> --%>
+											</form>
+										</div>
+										<!-- end of buttons -->
+										<div class="row" style="clear:both;">
+											<div class="col-md-12">
+												<hr/>
+											</div>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -379,8 +376,34 @@
 				</div>
 			</div>
 		</div>
-
 		<%@include file="../includes/footer.html"%>
-		
+		<script>
+			window.addEventListener('DOMContentLoaded', function(){
+				const pageFlag = '<c:out value="${boardType}" />';//tech,noti,free 등등 게시판 타입
+				const operForm = document.querySelector("#operForm");
+				
+				Array.prototype.forEach.call(document.querySelectorAll(".operBtns button"), function(btns) {
+					btns.addEventListener('click', function() {
+				    	operationFunc(this);
+				    },false);
+				});
+				
+				function operationFunc(target){
+					event.preventDefault();
+					const oper=target.dataset.oper;
+					if(oper=="list"){
+						operForm.querySelector("input[name='boardId']").remove();
+						operForm.setAttribute("action","/articles/"+pageFlag);
+						operForm.setAttribute("method","GET");
+						operForm.submit();
+					}else if(oper=="modify"){
+						console.log("modify");
+					}else{ //Delete
+						console.log("delete");
+					}
+				}
+				
+			});
+		</script>
 </body>
 </html>
