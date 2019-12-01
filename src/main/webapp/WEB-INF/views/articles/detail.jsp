@@ -377,6 +377,30 @@
 			</div>
 		</div>
 		<%@include file="../includes/footer.html"%>
+		<!-- 초기 로딩 [첨부파일 정보 세팅, 댓글 정보 세팅 등 -->
+		<script>
+			window.addEventListener('DOMContentLoaded', function(){
+				const boardId='<c:out value="${board.boardId}"/>';
+				fetch("/articles/files/"+boardId, {
+					method: "GET",
+			        credentials: "same-origin",
+				}).then((response) => {
+					if(response.status === 200 || response.status === 201){ //요청성공 시
+						return response.json().then(function(files) {
+							if(files.length!=0){//첨부파일이 있을 시에만 작동
+								files.forEach(function(item,index){
+									//첨부파일 card display=block;
+									//첨부파일 type에 따라 세팅
+								});
+							}
+						});
+					}else{
+						alert('첨부파일 요청 실패!');
+					}
+				}).catch(error => console.error('error:',error)); //요청에러 시 에러 로그 출력
+			});
+		</script>
+		<!-- 목록, 수정, 삭제 버튼 핸들러들 -->
 		<script>
 			window.addEventListener('DOMContentLoaded', function(){
 				const pageFlag = '<c:out value="${boardType}" />';//tech,noti,free 등등 게시판 타입

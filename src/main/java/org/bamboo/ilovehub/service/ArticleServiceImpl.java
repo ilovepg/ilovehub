@@ -110,11 +110,12 @@ public class ArticleServiceImpl implements ArticleService {
 		return boards;
 	}
 	//게시글 총 개수 가져오기[페이징을 위함]
+	@Override
 	public int getTotal(String classificationText) {
 		return boardMapper.getTotal(classificationText);
 	}
-	
 	//게시글 상세페이지
+	@Override
 	public BoardVO boardDetail(String boardType,Long boardId) {
 		Map<String,Object> param = new HashMap<String,Object>();
 		param.put("boardType", boardType);
@@ -123,7 +124,15 @@ public class ArticleServiceImpl implements ArticleService {
 		log.info("vo:"+vo);
 		return vo;
 	}
-	
+	//게시글 파일정보 가져오기
+	@Override
+	public List<AttachFileVO> getFilesInfo(Long boardId) {
+		List<AttachFileVO> files=boardMapper.getFilesInfo(boardId);
+		files.forEach(attachFile->{
+			log.info("getFilesInfo:"+attachFile);;
+		});
+		return files;
+	}
 	//필수예외처리[DB에서 not null인것들 예외처리 완료]
 	//TODO : 추후 회원가입과 로그인이 구현되면 writer도 예외처리해줘야하고, 세션을 검사하여 현재 세션이 연결된 회원만 글을 쓸 수 있도록 해야한다.(notepad++참고) 
 	private boolean essentialException(int preface, int classificationCode, 

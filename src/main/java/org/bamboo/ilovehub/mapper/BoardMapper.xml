@@ -124,6 +124,9 @@
 		  AND b.is_del = 'N' 
 		  AND b.board_id=#{boardId}
   	</select>
+  	<select id="getFilesInfo" parameterType="Long" resultType="org.bamboo.ilovehub.domain.AttachFileVO">
+  		SELECT UUID,upload_path,original_file,file_type FROM board_file WHERE board_id=#{boardId}
+  	</select>
   	<insert id="regArticle" useGeneratedKeys="true" keyProperty="boardVO.boardId" 
   			 parameterType="org.bamboo.ilovehub.domain.BoardVO">
   		insert into board (

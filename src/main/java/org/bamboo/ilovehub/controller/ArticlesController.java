@@ -1,14 +1,18 @@
 package org.bamboo.ilovehub.controller;
 
+import java.util.List;
 import java.util.Map;
 
+import org.bamboo.ilovehub.domain.AttachFileVO;
 import org.bamboo.ilovehub.domain.BoardVO;
 import org.bamboo.ilovehub.domain.ContainInitWriteVO;
 import org.bamboo.ilovehub.domain.Criteria;
 import org.bamboo.ilovehub.domain.PageCreator;
 import org.bamboo.ilovehub.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -77,6 +81,15 @@ public class ArticlesController {
 		log.info("detail페이지 정보:"+boardType+", "+boardId);
 		mv.addObject("board", articleService.boardDetail(boardType,boardId));
 		return mv;
+	}
+	
+	//게시글 첨부파일 정보 가져오기
+	@RequestMapping(value="/files/{id}",
+		produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@ResponseBody
+	public ResponseEntity<List<AttachFileVO>> getFilesInfo(@PathVariable("id")Long boardId) {
+		log.info("Welcome getFilesInfo paramInfo:"+boardId);
+		return new ResponseEntity<List<AttachFileVO>> (articleService.getFilesInfo(boardId),HttpStatus.OK);
 	}
 	
 }
