@@ -10,4 +10,6 @@ public interface FilesService {
 	public ResponseEntity<AttachFileVO> uploadFile(MultipartFile uploadFile);
 	//첨부파일 삭제
 	public ResponseEntity<String> deleteFile(AttachFileVO attachFileVO);
+	//첨부파일 썸네일 전송
+	public ResponseEntity<byte[]>thumbnail(String fileCallPath);
 }

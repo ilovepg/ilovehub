@@ -8,11 +8,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
+import org.apache.http.client.methods.HttpHead;
 import org.apache.tika.Tika;
 import org.bamboo.ilovehub.domain.AttachFileVO;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.extern.log4j.Log4j;
@@ -99,6 +102,26 @@ public class FilesServiceImpl implements FilesService {
 		}
 	}
 
+	@Override
+	public ResponseEntity<byte[]> thumbnail(String fileCallPath){
+		log.info("fileService thumbnail start");
+		File file = new File(rootUploadFolder+File.separator+fileCallPath);
+		log.info("thumbFile:"+file);
+		ResponseEntity<byte[]> result = null;
+		
+		try {
+			HttpHeaders header = new HttpHeaders();
+			header.add("Content-Type", checkFileType(file));
+			result = new ResponseEntity<byte[]>(FileCopyUtils.copyToByteArray(file),header,HttpStatus.OK);
+		} catch (IOException e) {
+			e.printStackTrace();
+			log.error(this.getClass().getSimpleName() + " " + new Object() {
+			}.getClass().getEnclosingMethod().getName() + " error:" + e.getMessage());
+			result = new ResponseEntity<byte[]>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return result;
+	}
+	
 	// 오늘 날짜의 경로를 문자열로 생성 -> 폴더 경로로 수정한 뒤에 반환
 	private String getSplitFolder() {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

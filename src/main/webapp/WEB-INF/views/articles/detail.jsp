@@ -129,9 +129,7 @@
     overflow: hidden;
     white-space: nowrap;
 }
-.fileUploadprogress{
-	width:100%;
-}
+
 </style>
 </head>
 
@@ -333,7 +331,7 @@
 										</div>
 										<!-- end of Card -->
 										<!-- 첨부파일 카드 -->
-										<div class="card" style="margin-top: 10px;">
+										<div class="card attachFileCard" style="margin-top: 10px;">
 											<div class="card-header">첨부파일</div>
 											<div class="card-body">
 												<!-- 첨부파일  표시영역 -->
@@ -388,9 +386,32 @@
 					if(response.status === 200 || response.status === 201){ //요청성공 시
 						return response.json().then(function(files) {
 							if(files.length!=0){//첨부파일이 있을 시에만 작동
-								files.forEach(function(item,index){
+								files.forEach(function(file,index){
 									//첨부파일 card display=block;
+									//DOM
+									const attachFileCardDom = document.querySelector(".attachFileCard");
+									const thumbnailsDom=document.querySelector("#thumbnails");
+									//파일정보들
+									const uploadPath=file['uploadPath'];
+									const uuid=file['uuid'];
+									const fileName=file['originalFile'].substring(0,file['originalFile'].lastIndexOf("."));
+									attachFileCardDom.style.display="flex";
+									let html=""; 
 									//첨부파일 type에 따라 세팅
+									if(isImage(file['fileType'])){ //이미지
+										const fileCallPath=encodeURIComponent(uploadPath+"/s_"+uuid+"_"+file['originalFile']);
+										html+='<div class="thumb">';
+										
+										html+='	<img class="icon" src="/thumbnail/'+fileCallPath+'">';
+										html+='	<div class="fileName" data-toggle="tooltip" data-placement="top">';
+										html+='		<span>' + fileName + '</span>';
+										html+='	</div>';
+										html+='</div>';
+									}else{ //일반 파일
+										const fileCallPath=encodeURIComponent(uploadPath+"/"+uuid+"_"+fileName);
+										
+									}
+									thumbnailsDom.insertAdjacentHTML('beforeend',html);
 								});
 							}
 						});
@@ -399,6 +420,14 @@
 					}
 				}).catch(error => console.error('error:',error)); //요청에러 시 에러 로그 출력
 			});
+			
+			//파라미터(item)이 이미지인지 아닌지 판별(MIME타입)
+			function isImage(file){
+				if(file.indexOf('image') > -1){
+					return true;
+				}
+				return false;
+			}
 		</script>
 		<!-- 목록, 수정, 삭제 버튼 핸들러들 -->
 		<script>
