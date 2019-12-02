@@ -1,14 +1,11 @@
 package org.bamboo.ilovehub.controller;
 
-import java.io.File;
-
 import org.bamboo.ilovehub.domain.AttachFileVO;
 import org.bamboo.ilovehub.service.FilesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -44,8 +41,8 @@ public class FilesController {
 	}
 	
 	//첨부파일 썸네일 전송
-	@RequestMapping(value="/thumbnail/{fileCallPath}", method=RequestMethod.GET)
-	public ResponseEntity<byte[]> thumbnail(@PathVariable("fileCallPath")String fileCallPath){
+	@RequestMapping(value="/thumbnail", method=RequestMethod.GET)
+	public ResponseEntity<byte[]> thumbnail(String fileCallPath){
 		log.info("welcome! thumbnail paramInfo:"+fileCallPath);
 		return fileService.thumbnail(fileCallPath);
 	}

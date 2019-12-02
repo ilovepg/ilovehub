@@ -401,10 +401,9 @@
 									if(isImage(file['fileType'])){ //이미지
 										const fileCallPath=encodeURIComponent(uploadPath+"/s_"+uuid+"_"+file['originalFile']);
 										html+='<div class="thumb">';
-										
-										html+='	<img class="icon" src="/thumbnail/'+fileCallPath+'">';
+										html+='	<img class="icon" src="/thumbnail?fileCallPath='+fileCallPath+'">';
 										html+='	<div class="fileName" data-toggle="tooltip" data-placement="top">';
-										html+='		<span>' + fileName + '</span>';
+										html+='		<span>' + file['originalFile'] + '</span>';
 										html+='	</div>';
 										html+='</div>';
 									}else{ //일반 파일
