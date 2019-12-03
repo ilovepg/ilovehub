@@ -20,116 +20,108 @@
 <link rel="stylesheet" href="/resources/css/main_section.css">
 <link rel="stylesheet" href="/resources/css/footer.css">
 <style>
-.main-content-wrapper .main-content-inner {
-	padding: 20px 0px 4px 0px;
-}
-
-.main-content-inner .card input[type=text] {
-	border-width: 0;
-	border: 1px solid transparent;
-	border-bottom: 1px solid #ccc;
-	border-radius: 3px;
-	background-color: #fff;
-	padding: 0.375rem 0.75rem;
-	line-height: 1.5;
-	height: 2.75em;
-}
-
-.main-content-inner .card label.header, .main-content-inner .card h3 {
-	margin-bottom: 0.25em;
-	padding: 0.25em 0.5em;
-/* 	opacity: 0.75; */
-	font-size: 1.17em;
-	font-weight: bold;
-	display: inline;
-}
-/* 제목아래 게시글정보 첫번째 span빼고 앞에 | 넣는 css */
-.info span:not(:first-child):before{
-	content: "|";
-    font-size: 0.75em;
-    color: #aaa;
-    padding: 0 1em;
-    vertical-align: 0.15em;
-}
-/* 태그 관련 */
-#tag-list {
-	padding: 16px 0;
-}
-
-#tag-list li {
-	display: inline-block;
-	margin: 0 5px;
-	font-size: 12px;
-	letter-spacing: -.5px;
-}
-
-#tag-list li.tag-item {
-	padding: 4px 8px;
-	background-color: #777;
-	color: #000;
-}
-
-.tag-item:hover {
-	background-color: #262626;
-	color: #fff;
-}
-
-
-
-/* 파일 업로드 관련 */
-/* 파일 노멀버튼 변경 */
-.btn-file{
-	position: relative;
-	overflow: hidden;
-}
-.btn-file input[type=file] {
-	position: absolute;
-	top: 0;
-	right: 0;
-	min-width: 100%;
-	min-height: 100%;
-	font-size: 100px;
-	text-align: right;
-	filter: alpha(opacity=0);
-	opacity: 0;
-	outline: none;
-	background: white;
-	cursor: inherit;
-	display: block;
-}
-/* 파일 썸네일 및 프로그래스 바 */
-.thumb { 
-	width:25%; 
-	padding-top: 25%;
-	float:left; 
-	position:relative; 
-	margin-right:30px;
-}
-.thumb > img.icon {
-	width:100%; 
-	max-width: 100%; 
-	height: auto;
-	max-height:75%;
-	position:absolute;
-	top: 0; 
-	left: 0; 
-	right: 0; 
-	bottom: 0; 
-}
-.thumb > .close {
-	width:20px; 
-	height:20px; 
-	cursor:pointer; 
-	opacity:10;
-	position:absolute;
-}
-.thumb div.fileName{ /* 파일이름이 길경우에는 '....' 표시 */
-	width:100%;
-	text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-}
-
+	.main-content-wrapper .main-content-inner {
+		padding: 20px 0px 4px 0px;
+	}
+	
+	.main-content-inner .card input[type=text] {
+		border-width: 0;
+		border: 1px solid transparent;
+		border-bottom: 1px solid #ccc;
+		border-radius: 3px;
+		background-color: #fff;
+		padding: 0.375rem 0.75rem;
+		line-height: 1.5;
+		height: 2.75em;
+	}
+	
+	.main-content-inner .card label.header, .main-content-inner .card h3 {
+		margin-bottom: 0.25em;
+		padding: 0.25em 0.5em;
+	/* 	opacity: 0.75; */
+		font-size: 1.17em;
+		font-weight: bold;
+		display: inline;
+	}
+	/* 제목아래 게시글정보 첫번째 span빼고 앞에 | 넣는 css */
+	.info span:not(:first-child):before{
+		content: "|";
+	    font-size: 0.75em;
+	    color: #aaa;
+	    padding: 0 1em;
+	    vertical-align: 0.15em;
+	}
+	/* 태그 관련 */
+	#tag-list {
+		padding: 16px 0;
+	}
+	
+	#tag-list li {
+		display: inline-block;
+		margin: 0 5px;
+		font-size: 12px;
+		letter-spacing: -.5px;
+	}
+	
+	#tag-list li.tag-item {
+		padding: 4px 8px;
+		background-color: #777;
+		color: #000;
+	}
+	
+	.tag-item:hover {
+		background-color: #262626;
+		color: #fff;
+	}
+	
+	
+	
+	/* 파일 업로드 관련 */
+	/* 파일 노멀버튼 변경 */
+	.btn-file{
+		position: relative;
+		overflow: hidden;
+	}
+	.btn-file input[type=file] {
+		position: absolute;
+		top: 0;
+		right: 0;
+		min-width: 100%;
+		min-height: 100%;
+		font-size: 100px;
+		text-align: right;
+		filter: alpha(opacity=0);
+		opacity: 0;
+		outline: none;
+		background: white;
+		cursor: inherit;
+		display: block;
+	}
+	/* 첨부파일 리스트 */
+	.uploadResult{
+		width:100%;
+		max-height: 150px;
+    	overflow-y: scroll;
+	}
+	.uploadResult ul li{
+		padding-bottom:5px;
+	}
+	 /* 미리보기 스타일 셋팅 */
+     #preview{
+         z-index: 9999;
+         position:absolute;
+         border:0px solid #ccc;
+         background:#333;
+         padding:1px;
+         color:#fff;
+     }
+	
+	.thumb div.fileName{ /* 파일이름이 길경우에는 '....' 표시 */
+		width:100%;
+		text-overflow: ellipsis;
+	    overflow: hidden;
+	    white-space: nowrap;
+	}
 </style>
 </head>
 
@@ -337,7 +329,9 @@
 												<!-- 첨부파일  표시영역 -->
 												<div class="row">
 													<div class="col-md-12">
-														<div id="thumbnails">
+														<div class='uploadResult'>
+															<ul>
+															</ul>
 														</div>
 													</div>
 												</div>
@@ -375,6 +369,40 @@
 			</div>
 		</div>
 		<%@include file="../includes/footer.html"%>
+		<!-- 첨부파일 이미지에 마우스 오버하면 썸네일 보이기 -->
+		<script>
+			window.addEventListener('DOMContentLoaded', function(){
+				const xOffset=10;
+				const yOffset=30;
+				const uploadResult=document.querySelector(".uploadResult");
+				uploadResult.addEventListener("mouseover",function(e){
+					const target = e.target;
+					if(target.className=="thumbnail"){
+						const body=document.querySelector("body");
+						const fileCallPath=target.dataset.filecallpath;
+						const html="<p id='preview'><img src=/thumbnail?fileCallPath="+fileCallPath+" width='400px'/></p>";
+						body.insertAdjacentHTML('beforeend',html);
+						const preview=document.querySelector("#preview");
+						preview.style.top=e.clientY+xOffset+"px";
+						preview.style.left=e.clientX+yOffset+"px";
+					}
+				});
+				uploadResult.addEventListener("mousemove",function(e){
+					const target = e.target;
+					if(target.className=="thumbnail"){
+						const preview=document.querySelector("#preview");
+						preview.style.top=e.clientY+xOffset+"px";
+						preview.style.left=e.clientX+yOffset+"px";
+					}
+				});
+				uploadResult.addEventListener("mouseout",function(e){
+					const target = e.target;
+					if(target.className=="thumbnail"){
+						document.querySelector("#preview").remove();
+					}
+				});
+			});
+		</script>
 		<!-- 초기 로딩 [첨부파일 정보 세팅, 댓글 정보 세팅 등 -->
 		<script>
 			window.addEventListener('DOMContentLoaded', function(){
@@ -387,30 +415,35 @@
 						return response.json().then(function(files) {
 							if(files.length!=0){//첨부파일이 있을 시에만 작동
 								files.forEach(function(file,index){
-									//첨부파일 card display=block;
 									//DOM
 									const attachFileCardDom = document.querySelector(".attachFileCard");
-									const thumbnailsDom=document.querySelector("#thumbnails");
+									const attachFileContainer=attachFileCardDom.querySelector(".uploadResult ul");
 									//파일정보들
 									const uploadPath=file['uploadPath'];
 									const uuid=file['uuid'];
-									const fileName=file['originalFile'].substring(0,file['originalFile'].lastIndexOf("."));
-									attachFileCardDom.style.display="flex";
+									const fileName=file['originalFile'];
+									//const fileName=file['originalFile'].substring(0,file['originalFile'].lastIndexOf("."));
+									attachFileCardDom.style.display="inherit";
 									let html=""; 
 									//첨부파일 type에 따라 세팅
 									if(isImage(file['fileType'])){ //이미지
-										const fileCallPath=encodeURIComponent(uploadPath+"/s_"+uuid+"_"+file['originalFile']);
+										const fileCallPath=encodeURIComponent(uploadPath+"/s_"+uuid+"_"+fileName);
+										html += "<li data-path='"+uploadPath+"' data-uuid='"+uuid+"' data-fileName='"+fileName+"' data-type='"+file['fileType']+"'>";
+										html += "	<div>"
+							  		    html += "		<span class='thumbnail' data-fileCallPath="+fileCallPath+">"+fileName+"</span>";
+							  		    html += "	</div>";
+							  		    html += "</li>";
+										/* 
 										html+='<div class="thumb">';
 										html+='	<img class="icon" src="/thumbnail?fileCallPath='+fileCallPath+'">';
 										html+='	<div class="fileName" data-toggle="tooltip" data-placement="top">';
 										html+='		<span>' + file['originalFile'] + '</span>';
 										html+='	</div>';
-										html+='</div>';
+										html+='</div>'; */
 									}else{ //일반 파일
 										const fileCallPath=encodeURIComponent(uploadPath+"/"+uuid+"_"+fileName);
-										
 									}
-									thumbnailsDom.insertAdjacentHTML('beforeend',html);
+									attachFileContainer.insertAdjacentHTML('beforeend',html);
 								});
 							}
 						});

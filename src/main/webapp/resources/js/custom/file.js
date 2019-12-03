@@ -17,7 +17,7 @@ window.addEventListener('DOMContentLoaded', function(){
 		if(target.name=="uploadFile"){
 			fileUploadHandler(target);
 		}
-	})
+	});
 	cloneUploadDiv = document.querySelector("div.uploadDiv").cloneNode(true);
 });
 
