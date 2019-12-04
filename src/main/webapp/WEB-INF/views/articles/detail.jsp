@@ -411,8 +411,11 @@
 						const html="<p id='preview'><img src=/thumbnail?fileCallPath="+fileCallPath+" width='200px'/></p>";
 						body.insertAdjacentHTML('beforeend',html);
 						const preview=document.querySelector("#preview");
-						preview.style.top=e.clientY+xOffset+"px";
-						preview.style.left=e.clientX+yOffset+"px";
+						preview.style.top=e.clientY+xOffset+document.documentElement.scrollTop+"px";
+						preview.style.left=e.clientX+yOffset+document.documentElement.scrollLeft+"px";
+// 						preview.style.top=e.offsetX+xOffset+"px";
+// 						preview.style.left=e.offsetY+yOffset+"px";
+						
 					}
 				});
 				uploadResult.addEventListener("mousemove",function(e){
