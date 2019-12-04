@@ -1,6 +1,7 @@
 package org.bamboo.ilovehub.service;
 
 import org.bamboo.ilovehub.domain.AttachFileVO;
+import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,5 +12,7 @@ public interface FilesService {
 	//첨부파일 삭제
 	public ResponseEntity<String> deleteFile(AttachFileVO attachFileVO);
 	//첨부파일 썸네일 전송
-	public ResponseEntity<byte[]>thumbnail(String fileCallPath);
+	public ResponseEntity<byte[]>display(String fileCallPath);
+	//첨부파일 다운로드
+	public ResponseEntity<Resource>download(String fileCallPath,String userAgent);
 }

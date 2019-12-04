@@ -101,12 +101,12 @@
 	.uploadResult{
 		width:100%;
 		max-height: 150px;
-    	overflow-y: scroll;
+    	overflow-y: auto;
 	}
 	.uploadResult ul li{
 		padding-bottom:5px;
 	}
-	 /* 미리보기 스타일 셋팅 */
+	 /* 썸네일 스타일 셋팅 */
      #preview{
          z-index: 9999;
          position:absolute;
@@ -115,6 +115,29 @@
          padding:1px;
          color:#fff;
      }
+     /* 첨부이미지 클릭 시 원본이미지 표시창 */
+	.bigPictureWrapper{
+		position: absolute;
+		display: none;
+		justify-content: center;
+		align-items: center;
+		top: 0%;
+		width: 100%;
+		height: 100%;
+		/* background-color: gray; */
+		z-index: 100;
+		background:rgba(255,255,255,0,5);
+	}
+	.bigPicture{
+		position: relative;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	.bigPicture img{
+		width:600px;
+	}
+	
 	
 	.thumb div.fileName{ /* 파일이름이 길경우에는 '....' 표시 */
 		width:100%;
@@ -322,6 +345,11 @@
 											</div>
 										</div>
 										<!-- end of Card -->
+										<!-- 썸네일 클릭시 원본이미지 보여주는 부분 -->
+										<div class="bigPictureWrapper">
+											<div class="bigPicture">
+											</div>
+										</div>
 										<!-- 첨부파일 카드 -->
 										<div class="card attachFileCard" style="margin-top: 10px;">
 											<div class="card-header">첨부파일</div>
@@ -377,10 +405,10 @@
 				const uploadResult=document.querySelector(".uploadResult");
 				uploadResult.addEventListener("mouseover",function(e){
 					const target = e.target;
-					if(target.className=="thumbnail"){
+					if(target.classList[0]=="thumbnail"){
 						const body=document.querySelector("body");
 						const fileCallPath=target.dataset.filecallpath;
-						const html="<p id='preview'><img src=/thumbnail?fileCallPath="+fileCallPath+" width='400px'/></p>";
+						const html="<p id='preview'><img src=/thumbnail?fileCallPath="+fileCallPath+" width='200px'/></p>";
 						body.insertAdjacentHTML('beforeend',html);
 						const preview=document.querySelector("#preview");
 						preview.style.top=e.clientY+xOffset+"px";
@@ -401,6 +429,48 @@
 						document.querySelector("#preview").remove();
 					}
 				});
+			});
+		</script>
+		<!-- 첨부파일 일반파일 누르면 다운로드, 이미지파일 누르면 원본파일 보이기 -->
+		<script>
+			window.addEventListener('DOMContentLoaded', function(){
+				document.querySelector(".uploadResult").addEventListener('click', function(e){
+					const target=e.target;
+					if(target.tagName=="SPAN"){
+						fileClickHandler(target);
+					}
+			    },false);
+				
+				function fileClickHandler(target){
+					const li=target.parentNode.parentNode;
+					const imageType=isImage(li.dataset.type)
+					if(imageType){ //이미지라면 원본보여주기
+						const fileCallPath = encodeURIComponent(li.dataset.path+"/"+li.dataset.uuid+"_"+li.dataset.filename); //썸네일의 경로+전체파일명(uuid포함)
+						showOriginalImg(fileCallPath);
+					}else{//이미지가 아니라면 다운로드
+						self.location = "/download?fileCallPath="+target.dataset.filecallpath;
+					}
+				}
+				
+				//표시된 원본이미지 클릭 시 안보이게
+				document.querySelector(".bigPictureWrapper").addEventListener('click', function(){
+					this.style.display="none";
+			    },false);
+				//원본이미지 표시
+				function showOriginalImg(fileCallPath){
+					const bigPictureWrapper = document.querySelector(".bigPictureWrapper");
+					const bigPicture = document.querySelector(".bigPicture");
+					bigPictureWrapper.style.display="flex";
+					bigPicture.innerHTML="<img width='100%' height='100%' src='/orginal?fileCallPath="+fileCallPath+"'>";
+				}
+				
+				//파라미터(item)이 이미지인지 아닌지 판별(MIME타입)  - 중복됨(위에서도씀)
+				function isImage(file){
+					if(file.indexOf('image') > -1){
+						return true;
+					}
+					return false;
+				}
 			});
 		</script>
 		<!-- 초기 로딩 [첨부파일 정보 세팅, 댓글 정보 세팅 등 -->
@@ -429,7 +499,7 @@
 									if(isImage(file['fileType'])){ //이미지
 										const fileCallPath=encodeURIComponent(uploadPath+"/s_"+uuid+"_"+fileName);
 										html += "<li data-path='"+uploadPath+"' data-uuid='"+uuid+"' data-fileName='"+fileName+"' data-type='"+file['fileType']+"'>";
-										html += "	<div>"
+										html += "	<div class='fileOutter'>"
 							  		    html += "		<span class='thumbnail' data-fileCallPath="+fileCallPath+">"+fileName+"</span>";
 							  		    html += "	</div>";
 							  		    html += "</li>";
@@ -442,6 +512,11 @@
 										html+='</div>'; */
 									}else{ //일반 파일
 										const fileCallPath=encodeURIComponent(uploadPath+"/"+uuid+"_"+fileName);
+										html += "<li data-path='"+uploadPath+"' data-uuid='"+uuid+"' data-fileName='"+fileName+"' data-type='"+file['fileType']+"'>";
+										html += "	<div class='fileOutter'>"
+							  		    html += "		<span data-fileCallPath="+fileCallPath+">"+fileName+"</span>";
+							  		    html += "	</div>";
+							  		    html += "</li>";
 									}
 									attachFileContainer.insertAdjacentHTML('beforeend',html);
 								});
@@ -453,7 +528,7 @@
 				}).catch(error => console.error('error:',error)); //요청에러 시 에러 로그 출력
 			});
 			
-			//파라미터(item)이 이미지인지 아닌지 판별(MIME타입)
+			//파라미터(item)이 이미지인지 아닌지 판별(MIME타입) - 중복됨(위에서도씀)
 			function isImage(file){
 				if(file.indexOf('image') > -1){
 					return true;

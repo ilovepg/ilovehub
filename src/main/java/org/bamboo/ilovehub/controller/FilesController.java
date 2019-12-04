@@ -3,10 +3,12 @@ package org.bamboo.ilovehub.controller;
 import org.bamboo.ilovehub.domain.AttachFileVO;
 import org.bamboo.ilovehub.service.FilesService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -40,10 +42,18 @@ public class FilesController {
 		return fileService.deleteFile(attachFileVO);
 	}
 	
-	//첨부파일 썸네일 전송
-	@RequestMapping(value="/thumbnail", method=RequestMethod.GET)
-	public ResponseEntity<byte[]> thumbnail(String fileCallPath){
-		log.info("welcome! thumbnail paramInfo:"+fileCallPath);
-		return fileService.thumbnail(fileCallPath);
+	//첨부파일 썸네일 또는 원본 전송
+	@RequestMapping(value={"/thumbnail", "/orginal"}, method=RequestMethod.GET)
+	public ResponseEntity<byte[]> display(String fileCallPath){
+		log.info("welcome! display paramInfo:"+fileCallPath);
+		return fileService.display(fileCallPath);
+	}
+	
+	//첨부파일 다운로드
+	@RequestMapping(value="/download", method=RequestMethod.GET,
+			produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	public ResponseEntity<Resource>download(@RequestHeader("User-Agent")String userAgent,String fileCallPath){
+		log.info("welcome! download paramInfo:"+fileCallPath+", "+userAgent);
+		return fileService.download(fileCallPath,userAgent);
 	}
 }

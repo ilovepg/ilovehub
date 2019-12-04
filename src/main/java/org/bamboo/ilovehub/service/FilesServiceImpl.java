@@ -3,6 +3,8 @@ package org.bamboo.ilovehub.service;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -11,6 +13,8 @@ import java.util.UUID;
 import org.apache.http.client.methods.HttpHead;
 import org.apache.tika.Tika;
 import org.bamboo.ilovehub.domain.AttachFileVO;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -101,10 +105,11 @@ public class FilesServiceImpl implements FilesService {
 			return new ResponseEntity<String>("fail",HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-
+	
+	//이미지 첨부파일 썸네일 전송
 	@Override
-	public ResponseEntity<byte[]> thumbnail(String fileCallPath){
-		log.info("fileService thumbnail start");
+	public ResponseEntity<byte[]> display(String fileCallPath){
+		log.info("fileService display start");
 		File file = new File(rootUploadFolder+File.separator+fileCallPath);
 		log.info("thumbFile:"+file);
 		ResponseEntity<byte[]> result = null;
@@ -120,6 +125,33 @@ public class FilesServiceImpl implements FilesService {
 			result = new ResponseEntity<byte[]>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return result;
+	}
+	
+	//첨부파일 다운로드[이미지 첨부파일 X]
+	@Override
+	public ResponseEntity<Resource> download(String fileCallPath, String userAgent) {
+		log.info("fileService download start");
+		Resource resource = new FileSystemResource(rootUploadFolder+File.separator+fileCallPath);
+		if(!resource.exists()) return new ResponseEntity<Resource>(HttpStatus.NOT_FOUND);
+		//Remove UUID
+		String resourceName = resource.getFilename();
+		String resourceOriginalName = resourceName.substring(resourceName.indexOf("_")+1);
+		HttpHeaders headers = new HttpHeaders();
+		
+		String downloadName=null;
+		try {
+			if(userAgent.contains("Trident")) { //IE
+				downloadName = URLEncoder.encode(resourceOriginalName,"UTF-8").replaceAll("\\+", " ");
+			}else if(userAgent.contains("Edge")) {//IE Edge
+				downloadName = URLEncoder.encode(resourceOriginalName,"UTF-8");
+			}else{ //Chrome
+				downloadName = new String(resourceOriginalName.getBytes("UTF-8"),"ISO-8859-1");
+			}
+			headers.add("Content-Disposition", "attachment; filename=" + downloadName);
+		}catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<Resource>(resource,headers,HttpStatus.OK);
 	}
 	
 	// 오늘 날짜의 경로를 문자열로 생성 -> 폴더 경로로 수정한 뒤에 반환
@@ -155,10 +187,6 @@ public class FilesServiceImpl implements FilesService {
 		}
 		return false;
 	}
-	
-	
-	
-	
 	// 파일타입 체크 후 반환-Files.probeContentType이 application/stream-octat 이러한 파일들(sql,jsp,php등)은 확장자 반환을 null로 하여
 	// 문제가 발생하여 위의 tika 라이브러리를 사용하였음.
 	/*private String checkFileType(File file) {
