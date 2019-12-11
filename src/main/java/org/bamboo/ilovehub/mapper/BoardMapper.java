@@ -14,7 +14,7 @@ public interface BoardMapper {
 	//게시글 조회 with paging
 	public List<BoardVO>getBoards(Criteria cri);
 	//총 게시글 수 가져오기
-	public int getTotal(String classificationText);
+	public int getTotal(Criteria cri);
 	//게시글 상세정보 가져오기
 	public BoardVO getBoardDetail(HashMap<String,Object>param);
 	//게시글 파일정보 가져오기

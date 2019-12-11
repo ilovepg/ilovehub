@@ -16,7 +16,8 @@ public class Criteria {
 	private int page; //페이지 번호
 	private int perPageBoardNum;//페이지 당 게시글 수
 	private String classificationText;//[공지,기술,자유]
-	
+	private String searchType; //검색타입 [제목,내용,작성자 등등]
+	private String keyword; //검색어
 	
 	public Criteria(int page, int perPageNum) {
 		if(page<1) page=1;
@@ -36,6 +37,11 @@ public class Criteria {
 	 */
 	public int getPageStart() {
 		return (page-1)*perPageBoardNum;
+	}
+	
+	//검색조건이 각 글자(T,W,C)로 구성되어 있으므로 검색 조건을 배열로 만들어서 Mybatis의 forEach(동적쿼리)를 이용하기 위함.
+	public String[] getTypeArr() {
+		return searchType==null?new String[] {}:searchType.split("");
 	}
 	
 }

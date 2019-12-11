@@ -50,7 +50,7 @@ public class ArticlesController {
 		cri.setClassificationText(boardType); //게시글 분류정보[tech,noti 등등] 세팅 
 		model.addAttribute("boardType",boardType);
 		model.addAttribute("list",articleService.getBoards(cri));
-		int total = articleService.getTotal(boardType);
+		int total = articleService.getTotal(cri);
 		model.addAttribute("pageMaker",new PageCreator(cri,total,10));
 		log.info(model.asMap().get("pageMaker"));//log
 	}

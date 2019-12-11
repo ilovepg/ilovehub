@@ -8,6 +8,7 @@ import java.util.Map;
 import org.bamboo.ilovehub.domain.BoardPrefaceVO;
 import org.bamboo.ilovehub.domain.BoardVO;
 import org.bamboo.ilovehub.domain.ContainInitWriteVO;
+import org.bamboo.ilovehub.domain.Criteria;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,7 @@ public class BoardMapperTest {
 		log.info(list.toString());
 	}
 	
-	@Test
+//	@Test
 	public void regArticleTest_글쓰기테스트() {
 		BoardVO vo = new BoardVO();
 		vo.setClassificationCode(2);
@@ -53,5 +54,15 @@ public class BoardMapperTest {
 		vo.setPermitReply('Y');
 	  	mapper.regArticle(vo);
 			
+	}
+	
+	@Test
+	public void 검색테스트() {
+		Criteria cri = new Criteria();
+		cri.setKeyword("tester");
+		cri.setSearchType("TC");
+		cri.setClassificationText("tech");
+		List<BoardVO>list = mapper.getBoards(cri);
+		list.forEach(board -> log.info(board));
 	}
 }

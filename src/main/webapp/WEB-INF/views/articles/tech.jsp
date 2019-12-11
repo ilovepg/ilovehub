@@ -320,7 +320,7 @@
                                             	<form id="searchForm"
 													class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
 													<div class="input-group mb-3">
-														<select class="form-control" name='type' >
+														<select class="form-control" name='searchType' >
 															<option value="">-----</option>
 															<option value="T">제목</option>
 															<option value="C">내용</option>
@@ -354,8 +354,8 @@
                                             <form id='actionForm' method='GET'>
                                             	<input type='hidden' name='page' value='${pageMaker.cri.page}'>
 												<input type='hidden' name='perPageBoardNum' value='${pageMaker.cri.perPageBoardNum}'>
-												<%-- <input type='hidden' name='type' value='<c:out value="${pageMaker.cri.type}"/>'>
-												<input type='hidden' name='keyword' value='<c:out value="${pageMaker.cri.keyword}"/>'> --%>
+												<input type='hidden' name='searchType' value='<c:out value="${pageMaker.cri.searchType}"/>'>
+												<input type='hidden' name='keyword' value='<c:out value="${pageMaker.cri.keyword}"/>'>
                                             </form>
                                         </div>
                                     </div>
@@ -408,7 +408,7 @@
 			}
 		});
 	</script>
-	
+	<!-- 정렬과 검색관린 기능  -->
     <script>
         let currentOrder="date"; //정렬 (처음에는 날짜순)) [date(날짜순),view(조회순),reply(댓글순)]
         window.onload = function(){
@@ -429,6 +429,12 @@
             const searchForm=document.querySelector("#searchForm"); //검색폼
             const searchFormBtn=searchForm.querySelector("button"); //검색버튼
             searchFormBtn.addEventListener("click", ()=> {goSearchHandler(searchForm);} );//검색버튼 클릭 이벤트
+            
+          	//검색 후 검색조건들을 그대로 세팅
+            const searchType='<c:out value="${pageMaker.cri.searchType}"/>';
+            const keyword='<c:out value="${pageMaker.cri.keyword}"/>';
+            searchForm.querySelector("select option[value='"+searchType+"']").setAttribute("selected","selected"); //검색타입 세팅
+            searchForm.querySelector("input[name=keyword]").value=keyword;
         }
 
         //'정렬 팝업의 li태그' 클릭하였을 때
@@ -467,7 +473,10 @@
         		event.preventDefault();
         		return false;
         	}
-        	
+        	//검색버튼을 클릭 하면 무조건 1페이지로 가게한다.
+        	searchForm.querySelector("input[name=page]").value=1;
+        	searchForm.setAttribute("action","/articles/"+pageFlag);
+        	searchForm.submit();
         }
     </script>
 </body>

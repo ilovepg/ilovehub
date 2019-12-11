@@ -13,7 +13,7 @@ public interface ArticleService {
 	//게시글 리스트 가져오기 [공지,기술,자유]
 	public List<BoardVO> getBoards(Criteria cri);
 	//게시글 총 갯수 가져오기-페이징을 위함
-	public int getTotal(String classificationText);
+	public int getTotal(Criteria cri);
 	//게시글 파일 정보 가져오기
 	public List<AttachFileVO>getFilesInfo(Long boardId);
 	//글쓰기[공지,기술,자유]

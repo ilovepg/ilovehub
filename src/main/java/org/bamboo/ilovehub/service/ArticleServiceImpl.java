@@ -111,8 +111,8 @@ public class ArticleServiceImpl implements ArticleService {
 	}
 	//게시글 총 개수 가져오기[페이징을 위함]
 	@Override
-	public int getTotal(String classificationText) {
-		return boardMapper.getTotal(classificationText);
+	public int getTotal(Criteria cri) {
+		return boardMapper.getTotal(cri);
 	}
 	//게시글 상세페이지
 	@Override

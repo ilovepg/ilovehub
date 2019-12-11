@@ -378,7 +378,9 @@
 											<form id="operForm">
 												<input type="hidden" name="boardId" value="<c:out value='${board.boardId}'/>">
 												<input type='hidden' name='page' value='${cri.page}'>
-												<input type='hidden' name='perPageBoardNum' value='${cri.perPageBoardNum}'><%-- 												<input type="hidden" name="type" value="<c:out value='${cri.type}'/>"> --%>
+												<input type='hidden' name='perPageBoardNum' value='${cri.perPageBoardNum}'>
+												<input type="hidden" name="searchType" value="<c:out value='${cri.searchType}'/>">
+												<input type="hidden" name="keyword" value="<c:out value='${cri.keyword}'/>">
 											</form>
 										</div>
 										<!-- end of buttons -->
