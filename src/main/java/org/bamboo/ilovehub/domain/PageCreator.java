@@ -26,7 +26,8 @@ public class PageCreator {
 		this.endPage=(int)Math.ceil(cri.getPage()/(double)perPagePageNum)*perPagePageNum;
 		this.startPage=endPage-(perPagePageNum-1);
 		
-		this.realEndPage = (int)(Math.ceil(total/perPagePageNum));
+		this.realEndPage = (int)(Math.ceil(total/(double)perPagePageNum));
+		//System.out.println("이해불가:"+Math.ceil(total/(double)perPagePageNum)+", total:"+total+", perPagePageNum:"+perPagePageNum);
 		if(realEndPage<endPage) {
 			this.endPage=realEndPage;
 		}
