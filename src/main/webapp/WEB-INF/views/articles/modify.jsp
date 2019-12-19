@@ -563,9 +563,7 @@
 						operForm.setAttribute("method","GET");
 						operForm.submit();
 					}else if(oper=="modify"){
-						operForm.setAttribute("action","/articles/"+pageFlag+"/change-form/"+id);;
-						operForm.setAttribute("method","GET");
-						operForm.submit();
+						console.log("modify");
 					}else{ //Delete
 						console.log("delete");
 					}

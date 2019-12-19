@@ -73,6 +73,14 @@ public class ArticlesController {
 		return mv;
 	}
 	
+	//게시글 수정화면 [공지,기술,자유]
+	@GetMapping("/{boardType}/change-form/{id}") 
+	public ModelAndView boardChangeForm(@PathVariable("boardType")String boardType,@PathVariable("id")Long boardId,@ModelAttribute("cri")Criteria cri) {
+		ModelAndView mv = new ModelAndView("/articles/modify");
+		log.info("/articles/"+boardType+"/change-form");
+		return mv;
+	}
+	
 	//게시글 상세페이지(Detail)
 	@GetMapping("/{boardType}/{id}")
 	public ModelAndView boardDetail(@PathVariable("boardType")String boardType, @PathVariable("id")Long boardId, 
